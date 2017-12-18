@@ -1,3 +1,3 @@
 # ymatskevich
-I write simple sentence
-I wrote one more sentence   
+Я прохожу обучение по курсу Job4j (http://job4j.ru/) Планирую его пройти в течении 2018.
+В этом репозитории находятся проекты, которые я реализовал во время обучения. 
