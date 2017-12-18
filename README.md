@@ -1,2 +1,2 @@
-﻿# ymatskevich
+# ymatskevich
 I write simple sentence
