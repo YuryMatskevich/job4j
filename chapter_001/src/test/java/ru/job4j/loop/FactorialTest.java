@@ -21,10 +21,4 @@ public class FactorialTest {
         Factorial factorial = new Factorial();
         assertThat(factorial.calc(0), is(1));
     }
-
-    @Test
-    public void whenCalculateFactorialForMinusNumberThenMinusOne() {
-        Factorial factorial = new Factorial();
-        assertThat(factorial.calc(-55), is(-1));
-    }
 }
