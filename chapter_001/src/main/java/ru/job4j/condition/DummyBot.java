@@ -1,9 +1,9 @@
 package ru.job4j.condition;
 
 /**
- * author Yury Matskevich(y.n.matskevich@gmail.com)
- * version $Id$
- * since 23.12.2017
+ * @author Yury Matskevich(y.n.matskevich@gmail.com)
+ * @version $Id$
+ * @since 23.12.2017
  */
 public class DummyBot {
     /**
