@@ -12,8 +12,8 @@ public class ArrayDuplicateTest {
     @Test
     public void whenRemoveDuplicatesThenArrayWithoutDuplicate() {
         ArrayDuplicate arrayDuplicate = new ArrayDuplicate();
-        String[] array = {"Привет", "Пока", "Пока", "Пока", "Привет", "Привет", "Привет", "Пока", "Мир"};
-        String[] expectArray = {"Привет", "Пока", "Мир"};
+        String[] array = {"Привет", "Мир", "Привет", "Супер", "Мир"};
+        String[] expectArray = {"Привет", "Мир", "Супер"};
         assertThat(arrayDuplicate.remove(array), is(expectArray));
     }
 }

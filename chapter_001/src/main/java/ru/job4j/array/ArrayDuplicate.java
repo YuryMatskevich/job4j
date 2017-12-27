@@ -15,26 +15,23 @@ public class ArrayDuplicate {
      */
     public String[] remove(String[] array) {
 
-        int nElem = array.length;
+        int size = array.length;
+        int cut = array.length;
 
-        for (int i = 0; i < nElem - 1; i++) {
-            int j;
-            for (j = i + 1; j < nElem; j++) {
-                if (array[j].equals(array[i])) {
-                    /*удаление первого найденного дубликата
-                    (перезапись содержимого последующей ячейки
-                     в предыдущую, начиная с первого найденного
-                     дубликата)*/
-                    for (int k = j; k < nElem - 1; k++) {
-                        array[k] = array[k + 1];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (array[i] == array[j] & i != j) {
+                    if (j != size - 1) {
+                        String cur = array[j];
+                        array[j] = array[j + 1];
+                        array[j + 1] = cur;
+                    } else {
+                        cut--;
                     }
-                    nElem--;
-                    /*повторная проверка элемента на позиции j
-                     т.к. там теперь новое значение*/
-                    j--;
                 }
             }
+            size--;
         }
-        return Arrays.copyOf(array, nElem);
+        return Arrays.copyOf(array, cut);
     }
 }
