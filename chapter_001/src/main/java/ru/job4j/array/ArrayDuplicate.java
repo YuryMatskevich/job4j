@@ -15,22 +15,15 @@ public class ArrayDuplicate {
      */
     public String[] remove(String[] array) {
 
-        int size = array.length;
         int cut = array.length;
 
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (array[i] == array[j] & i != j) {
-                    if (j != size - 1) {
-                        String cur = array[j];
-                        array[j] = array[j + 1];
-                        array[j + 1] = cur;
-                    } else {
-                        cut--;
-                    }
+        for (int i = 0; i < array.length; i++) {
+            for (int j = i + 1; j < cut; j++) {
+                if (array[i].equals(array[j])) {
+                    array[j] = array[j + 1];
+                    cut--;
                 }
             }
-            size--;
         }
         return Arrays.copyOf(array, cut);
     }
