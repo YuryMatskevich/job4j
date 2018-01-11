@@ -17,6 +17,10 @@ public class Tracker {
      */
     private int position = 0;
 
+    public String indexOf(Item item) {
+        return item.getId();
+    }
+
     public Item add(Item item) {
         this.items[this.position++] = item;
         return item;
@@ -25,19 +29,19 @@ public class Tracker {
     public void replace(String id, Item item) {
         int i;
         for (i = 0; i < position; i++) {
-            if (id.equals(this.items[i].getId())) {
+            if (id.equals(this.indexOf(items[i]))) {
+                this.items[i].setName(item.getName());
+                this.items[i].setDescription(item.getDescription());
+                this.items[i].setCreate(item.getCreate());
                 break;
             }
         }
-        this.items[i].setName(item.getName());
-        this.items[i].setDescription(item.getDescription());
-        this.items[i].setCreate(item.getCreate());
     }
 
     public void delete(String id) {
         int i;
         for (i = 0; i < position; i++) {
-            if (this.items[i].getId().equals(id)) {
+            if (this.indexOf(items[i]).equals(id)) {
                 break;
             }
         }
@@ -55,7 +59,7 @@ public class Tracker {
     public Item[] findAll() {
         Item[] cur = new Item[position];
         for (int i = 0; i < position; i++) {
-            cur[i] = items[i];
+            cur[i] = this.items[i];
         }
         return cur;
     }
@@ -65,7 +69,7 @@ public class Tracker {
         int elem = 0;
         for (int i = 0; i < position; i++) {
             if (items[i].getName().equals(key)) {
-                cur[elem++] = items[i];
+                cur[elem++] = this.items[i];
             }
         }
         return Arrays.copyOf(cur, elem);
@@ -73,15 +77,12 @@ public class Tracker {
 
     public Item findById(String id) {
         int i;
+        Item cur = null;
         for (i = 0; i < position; i++) {
-            if (items[i].getId().equals(id)) {
-                break;
+            if (this.indexOf(items[i]).equals(id)) {
+                cur = this.items[i];
             }
         }
-        if (i == position) {
-            return null;
-        } else {
-            return items[i];
-        }
+        return cur;
     }
 }

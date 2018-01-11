@@ -11,6 +11,18 @@ import static org.junit.Assert.assertThat;
 public class TrackerTest {
 
     /**
+     * Метод тестирующий получение Id заявки
+     */
+    @Test
+    public void whenIndexOfThenGetId() {
+        Tracker tracker = new Tracker();
+
+        Item item = new Item("test1", "testDescription1", 123L);
+
+        assertThat(tracker.indexOf(item), is(item.getId()));
+    }
+
+    /**
      * Метод тестирующий добовление заявки
      */
     @Test
@@ -39,7 +51,7 @@ public class TrackerTest {
         tracker.add(second);
         tracker.add(third);
 
-        assertThat(tracker.findById(second.getId()), is(second));
+        assertThat(tracker.findById(tracker.indexOf(second)), is(second));
     }
 
     /**
@@ -56,7 +68,7 @@ public class TrackerTest {
 
         Item[] cur = null;
 
-        assertThat(tracker.findById(second.getId()), is(cur));
+        assertThat(tracker.findById(tracker.indexOf(second)), is(cur));
     }
 
     /**
@@ -98,9 +110,9 @@ public class TrackerTest {
         // Обновляем заявку в трекере.
         tracker.replace(previous.getId(), next);
         // Проверяем, что заявка с таким id имеет новые значения полей.
-        assertThat(tracker.findById(previous.getId()).getName(), is("test2"));
-        assertThat(tracker.findById(previous.getId()).getDescription(), is("testDescription2"));
-        assertThat(tracker.findById(previous.getId()).getCreate(), is(1234L));
+        assertThat(tracker.findById(tracker.indexOf(previous)).getName(), is("test2"));
+        assertThat(tracker.findById(tracker.indexOf(previous)).getDescription(), is("testDescription2"));
+        assertThat(tracker.findById(tracker.indexOf(previous)).getCreate(), is(1234L));
     }
 
     /**
