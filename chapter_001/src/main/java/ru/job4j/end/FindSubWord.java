@@ -14,11 +14,7 @@ public class FindSubWord {
             int k = 0;
             while (k != chSub.length && chOrigin[j] == chSub[k]) {
                 goal++;
-                //данной условие для того, чтоб
-                //метод не реагировал на единственное
-                //совпадение, т.е. когда вместо слова,
-                //sub передает одну букву.
-                if (goal != 1) {
+                if (goal == chSub.length) {
                     return true;
                 }
                 j++;

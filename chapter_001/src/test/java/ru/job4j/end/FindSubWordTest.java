@@ -18,12 +18,12 @@ public class FindSubWordTest {
     @Test
     public void whenWordDoesNotHaveSubWordThenFalse() {
         FindSubWord subWord = new FindSubWord();
-        assertThat(subWord.contains("village", "old"), is(false));
+        assertThat(subWord.contains("village", "vid"), is(false));
     }
 
     @Test
-    public void whenWordHasOnlySubLetterThenFalse() {
+    public void whenWordHasOnlySubLetterThenTrue() {
         FindSubWord subWord = new FindSubWord();
-        assertThat(subWord.contains("village", "a"), is(false));
+        assertThat(subWord.contains("village", "a"), is(true));
     }
 }
