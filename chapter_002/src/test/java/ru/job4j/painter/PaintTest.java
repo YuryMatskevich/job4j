@@ -45,7 +45,6 @@ public class PaintTest {
                                 .toString()
                 )
         );
-        System.setOut(stdout);
     }
 
     @Test
@@ -63,6 +62,5 @@ public class PaintTest {
                                 .toString()
                 )
         );
-        System.setOut(stdout);
     }
 }
