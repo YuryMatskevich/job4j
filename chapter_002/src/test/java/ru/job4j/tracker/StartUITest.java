@@ -82,8 +82,8 @@ public class StartUITest {
 
         String string = new String(out.toByteArray());
 
-        String subString1 = "Имя заявки: test name1\r\nОписание заявки: desc1\r\n";
-        String subString2 = "Имя заявки: test name2\r\nОписание заявки: desc2\r\n";
+        String subString1 = String.format("Имя заявки: test name1%nОписание заявки: desc1%n");
+        String subString2 = String.format("Имя заявки: test name2%nОписание заявки: desc2%n");
 
         assertFalse(string.lastIndexOf(subString1) < 0);
         assertFalse(string.lastIndexOf(subString2) < 0);
@@ -99,7 +99,7 @@ public class StartUITest {
         new StartUI(input, tracker).init();
 
         String string = new String(out.toByteArray());
-        String subString = "Id заявки: " + item.getId() + "\r\n" + "Имя заявки: test name\r\nОписание заявки: desc\r\n";
+        String subString = String.format("Id заявки: %s%nИмя заявки: test name%nОписание заявки: desc%n", item.getId());
 
         assertFalse(string.lastIndexOf(subString) < 0);
     }
@@ -114,7 +114,7 @@ public class StartUITest {
         new StartUI(input, tracker).init();
 
         String string = new String(out.toByteArray());
-        String subString = "Id заявки: " + item.getId() + "\r\n" + "Имя заявки: " + item.getName() + "\r\n" + "Описание заявки: desc\r\n";
+        String subString = String.format("Id заявки: %s%nИмя заявки: %s%nОписание заявки: desc%n", item.getId(), item.getName());
 
         assertFalse(string.lastIndexOf(subString) < 0);
     }
