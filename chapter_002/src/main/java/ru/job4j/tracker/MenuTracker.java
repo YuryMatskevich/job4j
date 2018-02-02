@@ -16,13 +16,13 @@ public class MenuTracker {
     }
 
     public void fillActions() {
-        this.actions[0] = new MenuTracker.AddItem();
-        this.actions[1] = new MenuTracker.ShowItems();
-        this.actions[2] = new MenuTracker.EditItem();
+        this.actions[0] = this.new AddItem();
+        this.actions[1] = this.new ShowItems();
+        this.actions[2] = this.new EditItem();
         this.actions[3] = new MenuTracker.DeleteItems();
         this.actions[4] = new MenuTracker.FindBiID();
         this.actions[5] = new MenuTracker.FindBiName();
-        this.actions[6] = new MenuTracker.ExitProgram();
+        this.actions[6] = new ExitProgram();
     }
 
     public void select(int key) {
@@ -35,7 +35,7 @@ public class MenuTracker {
         }
     }
 
-    private static class AddItem implements UserAction {
+    private class AddItem implements UserAction {
 
         public int key() {
             return 0;
@@ -52,7 +52,7 @@ public class MenuTracker {
         }
     }
 
-    private static class ShowItems implements UserAction {
+    private class ShowItems implements UserAction {
 
         public int key() {
             return 1;
@@ -70,7 +70,7 @@ public class MenuTracker {
         }
     }
 
-    private static class EditItem implements UserAction {
+    private class EditItem implements UserAction {
 
         public int key() {
             return 2;
@@ -141,19 +141,19 @@ public class MenuTracker {
             return String.format("%s. %s", this.key(), "Поиск заявки по имени");
         }
     }
+}
 
-    private static class ExitProgram implements UserAction {
+class ExitProgram implements UserAction {
 
-        public int key() {
-            return 6;
-        }
+    public int key() {
+        return 6;
+    }
 
-        public void execute(Input input, Tracker tracker) {
+    public void execute(Input input, Tracker tracker) {
 
-        }
+    }
 
-        public String info() {
-            return String.format("%s. %s", this.key(), "Выход их программы");
-        }
+    public String info() {
+        return String.format("%s. %s", this.key(), "Выход их программы");
     }
 }
