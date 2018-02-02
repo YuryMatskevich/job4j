@@ -6,6 +6,7 @@ package ru.job4j.tracker;
  */
 public class MenuTracker {
 
+    private int[] ranges = new int[] {0, 1, 2, 3, 4, 5, 6};
     private Input input;
     private Tracker tracker;
     private UserAction[] actions = new UserAction[7];
@@ -13,6 +14,10 @@ public class MenuTracker {
     public MenuTracker(Input input, Tracker tracker) {
         this.input = input;
         this.tracker = tracker;
+    }
+
+    public int[] getRanges() {
+        return ranges;
     }
 
     public void fillActions() {
@@ -25,8 +30,15 @@ public class MenuTracker {
         this.actions[6] = new MenuTracker.ExitProgram();
     }
 
-    public void select(int key) {
+
+
+    public boolean select(int key) {
         this.actions[key].execute(this.input, this.tracker);
+        boolean showMenu = true;
+        if (key == 6) {
+            showMenu = false;
+        }
+        return showMenu;
     }
 
     public void show() {
