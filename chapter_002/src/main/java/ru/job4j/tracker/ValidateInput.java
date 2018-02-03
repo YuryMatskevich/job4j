@@ -6,6 +6,17 @@ package ru.job4j.tracker;
  */
 public class ValidateInput extends ConsoleInput {
 
+    private final Input input;
+
+    public ValidateInput(final Input input) {
+        this.input = input;
+    }
+
+    @Override
+    public String ask(String question) {
+        return this.input.ask(question);
+    }
+
     @Override
     public int ask(String question, int[] range) {
         boolean invalid = true;

@@ -42,7 +42,7 @@ public class StartUITest {
     @Test
     public void whenUserAddItemThenTrackerHasNewItemWithSameName() {
         Tracker tracker = new Tracker();
-        Input input = new StubInput(new String[]{"0", "test name", "desc", "6"});
+        Input input = new ValidateInput(new StubInput(new String[]{"0", "test name", "desc", "6"}));
         new StartUI(input, tracker).init();
         assertThat(tracker.findAll()[0].getName(), is("test name"));
     }
@@ -53,7 +53,7 @@ public class StartUITest {
     public void whenUpdateThenTrackerHasUpdatedValue() {
         Tracker tracker = new Tracker();
         Item item = tracker.add(new Item("test name", "desc", 123L));
-        Input input = new StubInput(new String[]{"2", item.getId(), "test name1", "desc", "6"});
+        Input input = new ValidateInput(new StubInput(new String[]{"2", item.getId(), "test name1", "desc", "6"}));
         new StartUI(input, tracker).init();
         assertThat(tracker.findById(item.getId()).getName(), is("test name1"));
     }
@@ -63,8 +63,8 @@ public class StartUITest {
     @Test
     public void whenDeleteThenTrackerHasNotDeletedItem() {
         Tracker tracker = new Tracker();
-        Input input = new StubInput(new String[]{"0", "test name1", "desc1",
-                                                 "0", "test name2", "desc2", "6"});
+        Input input = new ValidateInput(new StubInput(new String[]{"0", "test name1", "desc1",
+                                                                   "0", "test name2", "desc2", "6"}));
         new StartUI(input, tracker).init();
         Item item = tracker.findAll()[0];
         tracker.delete(item.getId());
@@ -76,7 +76,7 @@ public class StartUITest {
     @Test
     public void whenShowAllTheItems() {
         Tracker tracker = new Tracker();
-        Input input = new StubInput(new String[]{"0", "test name1", "desc1", "0", "test name2", "desc2", "1", "6"});
+        Input input = new ValidateInput(new StubInput(new String[]{"0", "test name1", "desc1", "0", "test name2", "desc2", "1", "6"}));
         new StartUI(input, tracker).init();
         tracker.findAll();
 
@@ -95,7 +95,7 @@ public class StartUITest {
     public void whenFindItemById() {
         Tracker tracker = new Tracker();
         Item item = tracker.add(new Item("test name", "desc", 123L));
-        Input input = new StubInput(new String[]{"4", item.getId(), "6"});
+        Input input = new ValidateInput(new StubInput(new String[]{"4", item.getId(), "6"}));
         new StartUI(input, tracker).init();
 
         String string = new String(out.toByteArray());
@@ -110,7 +110,7 @@ public class StartUITest {
     public void whenFindItemByName() {
         Tracker tracker = new Tracker();
         Item item = tracker.add(new Item("test name", "desc", 123L));
-        Input input = new StubInput(new String[]{"5", item.getName(), "6"});
+        Input input = new ValidateInput(new StubInput(new String[]{"5", item.getName(), "6"}));
         new StartUI(input, tracker).init();
 
         String string = new String(out.toByteArray());
