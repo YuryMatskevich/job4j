@@ -21,13 +21,13 @@ public class MenuTracker {
     }
 
     public void fillActions() {
-        this.actions[0] = this.new AddItem();
-        this.actions[1] = this.new ShowItems();
-        this.actions[2] = this.new EditItem();
-        this.actions[3] = new MenuTracker.DeleteItems();
-        this.actions[4] = new MenuTracker.FindBiID();
-        this.actions[5] = new MenuTracker.FindBiName();
-        this.actions[6] = new ExitProgram();
+        this.actions[0] = this.new AddItem(0, "Добавление новой заявки");
+        this.actions[1] = this.new ShowItems(1, "Показать все заявки");
+        this.actions[2] = this.new EditItem(2, "Редактирование заявки");
+        this.actions[3] = new MenuTracker.DeleteItems(3, "Удаление заявки");
+        this.actions[4] = new MenuTracker.FindBiID(4, "Поиск заявки по id");
+        this.actions[5] = new MenuTracker.FindBiName(5, "Поиск заявки по имени");
+        this.actions[6] = new ExitProgram(6, "Выход их программы");
     }
 
 
@@ -47,7 +47,12 @@ public class MenuTracker {
         }
     }
 
-    private class AddItem implements UserAction {
+    private class AddItem extends BaseAction {
+
+
+        protected AddItem(int key, String name) {
+            super(key, name);
+        }
 
         public int key() {
             return 0;
@@ -58,13 +63,13 @@ public class MenuTracker {
             String desc = input.ask("Введите описание: ");
             tracker.add(new Item(name, desc, System.currentTimeMillis()));
         }
-
-        public String info() {
-            return String.format("%s. %s", this.key(), "Добавление новой заявки");
-        }
     }
 
-    private class ShowItems implements UserAction {
+    private class ShowItems extends BaseAction {
+
+        protected ShowItems(int key, String name) {
+            super(key, name);
+        }
 
         public int key() {
             return 1;
@@ -76,13 +81,13 @@ public class MenuTracker {
                                                     item.getId(), item.getName(), item.getDescription(), item.getCreate()));
             }
         }
-
-        public String info() {
-            return String.format("%s. %s", this.key(), "Показать все заявки");
-        }
     }
 
-    private class EditItem implements UserAction {
+    private class EditItem extends BaseAction {
+
+        protected EditItem(int key, String name) {
+            super(key, name);
+        }
 
         public int key() {
             return 2;
@@ -95,13 +100,13 @@ public class MenuTracker {
             Item item = new Item(name, desc, System.currentTimeMillis());
             tracker.replace(id, item);
         }
-
-        public String info() {
-            return String.format("%s. %s", this.key(), "Редактирование заявки");
-        }
     }
 
-    private static class DeleteItems implements UserAction {
+    private static class DeleteItems extends BaseAction {
+
+        protected DeleteItems(int key, String name) {
+            super(key, name);
+        }
 
         public int key() {
             return 3;
@@ -111,13 +116,13 @@ public class MenuTracker {
             String id = input.ask("Введите id удаляемой заявки: ");
             tracker.delete(id);
         }
-
-        public String info() {
-            return String.format("%s. %s", this.key(), "Удаление заявки");
-        }
     }
 
-    private static class FindBiID implements UserAction {
+    private static class FindBiID extends BaseAction {
+
+        protected FindBiID(int key, String name) {
+            super(key, name);
+        }
 
         public int key() {
             return 4;
@@ -129,13 +134,13 @@ public class MenuTracker {
             System.out.println(String.format("Id заявки: %s%nИмя заявки: %s%nОписание заявки: %s%nВремя создания заявки: %s%n",
                     item.getId(), item.getName(), item.getDescription(), item.getCreate()));
         }
-
-        public String info() {
-            return String.format("%s. %s", this.key(), "Поиск заявки по id");
-        }
     }
 
-    private static class FindBiName implements UserAction {
+    private static class FindBiName extends BaseAction {
+
+        protected FindBiName(int key, String name) {
+            super(key, name);
+        }
 
         public int key() {
             return 5;
@@ -148,14 +153,14 @@ public class MenuTracker {
                         item.getId(), item.getName(), item.getDescription(), item.getCreate()));
             }
         }
-
-        public String info() {
-            return String.format("%s. %s", this.key(), "Поиск заявки по имени");
-        }
     }
 }
 
-class ExitProgram implements UserAction {
+class ExitProgram extends BaseAction {
+
+    protected ExitProgram(int key, String name) {
+        super(key, name);
+    }
 
     public int key() {
         return 6;
@@ -163,9 +168,5 @@ class ExitProgram implements UserAction {
 
     public void execute(Input input, Tracker tracker) {
 
-    }
-
-    public String info() {
-        return String.format("%s. %s", this.key(), "Выход их программы");
     }
 }
