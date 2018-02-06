@@ -20,13 +20,9 @@ public abstract class Figure {
     }
 
     public boolean exist(Figure figure) {
-        int f1x = this.position.getX();
-        int f1y = this.position.getY();
 
-        int f2x = figure.position.getX();
-        int f2y = figure.position.getY();
-
-        return (f1x == f2x && f1y == f2y) ? true : false;
+        return (this.position.getX() == figure.position.getX() &&
+                this.position.getY() == figure.position.getY()) ? true : false;
     }
 
     public abstract Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException;
