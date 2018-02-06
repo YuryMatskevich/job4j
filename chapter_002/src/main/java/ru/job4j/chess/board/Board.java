@@ -8,11 +8,8 @@ import ru.job4j.chess.figure.*;
  * @since 0.1
  */
 public class Board {
-
     private int position = 0;
-
     private Figure[] figures = new Figure[32];
-
     public void add(Figure figure) throws ImpossibleMoveException, OccupiedWayException {
         for (int i = 0; i < position; i++) {
             if (figures[i].exist(figure)) {
@@ -21,7 +18,6 @@ public class Board {
         }
         figures[position++] = figure;
     }
-
     public boolean move(Cell source, Cell dest) throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
         Figure curFigure = null;
         int cur;

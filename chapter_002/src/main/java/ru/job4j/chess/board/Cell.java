@@ -9,7 +9,6 @@ import ru.job4j.chess.exeption.ImpossibleMoveException;
 public class Cell {
     private int x;
     private int y;
-
     /**
      * Конструктор принимает координаты X(горизонтальная)[1, 8], Y(вертикальная)[1, 8].
      * Начало координат в нижнем левом углу.
@@ -22,7 +21,6 @@ public class Cell {
             this.y = y;
         }
     }
-
     /**
      * Конструктор принимает название ячейки(пример a1, b3 и т.д.)
      * и уст. в полях x и y, соотв. ячейки, координаты
@@ -39,7 +37,6 @@ public class Cell {
         char ch = s.charAt(0);
         int y = Integer.parseInt(s.substring(1));
         int x;
-
         switch (ch) {
             case 'a':
                 x = 1;
@@ -69,14 +66,12 @@ public class Cell {
                 x = 9;
                 break;
         }
-
         if (x > 8 || y > 8) {
             throw new ImpossibleMoveException("Недопустимый ход/начальное положение фигуры");
         } else {
             return new int[] {x, y};
         }
     }
-
     public boolean cellEquals(Cell cell) {
         boolean result = false;
         if (this.x == cell.x && this.y == cell.y) {
@@ -84,11 +79,9 @@ public class Cell {
         }
         return result;
     }
-
     public int getX() {
         return x;
     }
-
     public int getY() {
         return y;
     }

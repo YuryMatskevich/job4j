@@ -16,7 +16,6 @@ import static org.junit.Assert.assertThat;
  * @since 0.1
  */
 public class BoardTest {
-
     @Test
     public void whenAddFigureThenItExists() throws ImpossibleMoveException, OccupiedWayException {
         Board board = new Board();
@@ -33,7 +32,6 @@ public class BoardTest {
             Assert.assertNotEquals("", e);
         }
     }
-
     @Test
     public void whenAddFigureInIllegalCellThenException() throws ImpossibleMoveException, OccupiedWayException {
         Board board = new Board();
@@ -48,7 +46,6 @@ public class BoardTest {
             Assert.assertNotEquals("", e);
         }
     }
-
     @Test
     public void whenMoveFigureThenItIsInOtherCell() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
         Board board = new Board();
@@ -73,7 +70,6 @@ public class BoardTest {
             Assert.assertNotEquals("", e);
         }
     }
-
     @Test
     public void whenMoveFigureThroughOtherFigureThenException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
         Board board = new Board();
@@ -87,7 +83,6 @@ public class BoardTest {
             Assert.assertNotEquals("", e);
         }
     }
-
     @Test
     public void whenMoveFigureThenGetWay() throws ImpossibleMoveException {
         Figure figure = new ChessFigure(new Cell("f8"), new Elephant());
@@ -99,7 +94,6 @@ public class BoardTest {
             assertThat(way[i].cellEquals(ways[i]), is(true));
         }
     }
-
     @Test
     public void whenMoveTowerThenGetWay() throws ImpossibleMoveException {
         Figure figure = new ChessFigure(new Cell("d4"), new Tower());

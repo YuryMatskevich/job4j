@@ -12,12 +12,9 @@ import static java.lang.Math.abs;
 public class Horse implements IChessMove {
     @Override
     public Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException {
-
         int deltaX = dest.getX() - source.getX();
         int deltaY = dest.getY() - source.getY();
-
         Cell[] way = new Cell[3];
-
         if ((abs(deltaX) == 1 & abs(deltaY) == 2) | (abs(deltaX) == 2 & abs(deltaY) == 1)) {
             for (int i = 0, mull = 1; i < 2; i++, mull++) {
                 if (deltaY > 0 & abs(deltaY) == 2) {

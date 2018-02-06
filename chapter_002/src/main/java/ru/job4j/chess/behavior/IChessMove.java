@@ -8,5 +8,5 @@ import ru.job4j.chess.exeption.ImpossibleMoveException;
  * @since 0.1
  */
 public interface IChessMove {
-    Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException;
+     Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException;
 }

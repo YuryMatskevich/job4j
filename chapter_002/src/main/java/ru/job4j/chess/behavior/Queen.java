@@ -16,9 +16,7 @@ public class Queen implements IChessMove {
     public Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException {
         int deltaX = abs(dest.getX() - source.getX());
         int deltaY = abs(dest.getY() - source.getY());
-
         Cell[] way;
-
         if (deltaX == deltaY) {
             way = new Cell[deltaX];
             iChessMove = new Elephant();
