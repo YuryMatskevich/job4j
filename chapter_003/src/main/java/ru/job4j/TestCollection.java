@@ -8,16 +8,16 @@ import java.util.*;
  */
 public class TestCollection {
     private static final int TIMES = 1_000_000;
-    private static final String abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final Random random = new Random(0);
-    private static final String[] array = RString(TIMES);
+    private static final String ABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final Random RANDOM = new Random(0);
+    private static final String[] ARRAY = rString(TIMES);
 
-    private static String[] RString(int sizeArray) {
+    private static String[] rString(int sizeArray) {
         String[] array = new String[sizeArray];
         for (int out = 0; out < array.length; out++) {
-            char[] ch = new char [random.nextInt(10) + 1];
+            char[] ch = new char[RANDOM.nextInt(10) + 1];
             for (int i = 0; i < ch.length; i++) {
-                ch[i] = abc.charAt(random.nextInt(abc.length()));
+                ch[i] = ABC.charAt(RANDOM.nextInt(ABC.length()));
             }
             array[out] = new String(ch);
         }
@@ -27,7 +27,7 @@ public class TestCollection {
     public long add(Collection<String> collection, int amount) {
         long start = System.currentTimeMillis();
         for (int i = 0; i < amount; i++) {
-            collection.add(array[i]);
+            collection.add(ARRAY[i]);
         }
         long finish = System.currentTimeMillis();
         return (finish - start);
@@ -36,7 +36,7 @@ public class TestCollection {
     public long delete(Collection<String> collection, int amount) {
         long start = System.currentTimeMillis();
         for (int i = 0; i < amount; i++) {
-            collection.remove(array[i]);
+            collection.remove(ARRAY[i]);
         }
         long finish = System.currentTimeMillis();
         return (finish - start);
