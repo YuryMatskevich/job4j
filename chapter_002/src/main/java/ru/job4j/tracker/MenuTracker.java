@@ -1,15 +1,17 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Yury Matskevich
  * @since 0.1
  */
 public class MenuTracker {
-
     private int[] ranges = new int[] {0, 1, 2, 3, 4, 5, 6};
     private Input input;
     private Tracker tracker;
-    private UserAction[] actions = new UserAction[7];
+    private List<UserAction> actions = new ArrayList<>();
 
     public MenuTracker(Input input, Tracker tracker) {
         this.input = input;
@@ -21,19 +23,17 @@ public class MenuTracker {
     }
 
     public void fillActions() {
-        this.actions[0] = this.new AddItem(0, "Добавление новой заявки");
-        this.actions[1] = this.new ShowItems(1, "Показать все заявки");
-        this.actions[2] = this.new EditItem(2, "Редактирование заявки");
-        this.actions[3] = new MenuTracker.DeleteItems(3, "Удаление заявки");
-        this.actions[4] = new MenuTracker.FindBiID(4, "Поиск заявки по id");
-        this.actions[5] = new MenuTracker.FindBiName(5, "Поиск заявки по имени");
-        this.actions[6] = new ExitProgram(6, "Выход их программы");
+        actions.add(this.new AddItem(0, "Добавление новой заявки"));
+        actions.add(this.new ShowItems(1, "Показать все заявки"));
+        actions.add(this.new EditItem(2, "Редактирование заявки"));
+        actions.add(new MenuTracker.DeleteItems(3, "Удаление заявки"));
+        actions.add(new MenuTracker.FindBiID(4, "Поиск заявки по id"));
+        actions.add(new MenuTracker.FindBiName(5, "Поиск заявки по имени"));
+        actions.add(new ExitProgram(6, "Выход их программы"));
     }
 
-
-
     public boolean select(int key) {
-        this.actions[key].execute(this.input, this.tracker);
+        this.actions.get(key).execute(this.input, this.tracker);
         boolean showMenu = true;
         if (key == 6) {
             showMenu = false;
@@ -48,8 +48,6 @@ public class MenuTracker {
     }
 
     private class AddItem extends BaseAction {
-
-
         protected AddItem(int key, String name) {
             super(key, name);
         }
@@ -66,7 +64,6 @@ public class MenuTracker {
     }
 
     private class ShowItems extends BaseAction {
-
         protected ShowItems(int key, String name) {
             super(key, name);
         }
@@ -84,7 +81,6 @@ public class MenuTracker {
     }
 
     private class EditItem extends BaseAction {
-
         protected EditItem(int key, String name) {
             super(key, name);
         }
@@ -103,7 +99,6 @@ public class MenuTracker {
     }
 
     private static class DeleteItems extends BaseAction {
-
         protected DeleteItems(int key, String name) {
             super(key, name);
         }
@@ -119,7 +114,6 @@ public class MenuTracker {
     }
 
     private static class FindBiID extends BaseAction {
-
         protected FindBiID(int key, String name) {
             super(key, name);
         }
@@ -137,7 +131,6 @@ public class MenuTracker {
     }
 
     private static class FindBiName extends BaseAction {
-
         protected FindBiName(int key, String name) {
             super(key, name);
         }
@@ -157,7 +150,6 @@ public class MenuTracker {
 }
 
 class ExitProgram extends BaseAction {
-
     protected ExitProgram(int key, String name) {
         super(key, name);
     }
