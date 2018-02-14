@@ -26,6 +26,10 @@ public class SortUserTest {
         user.add(user2);
         user.add(user3);
         user.add(user4);
-        assertThat(sort.sort(user).toString(), is(String.format("[%s, %s, %s, %s]", user4.toString(), user3.toString(), user2.toString(), user1.toString())));
+        User[] orderExpected = {user4, user3, user2, user1};
+        int i = 0;
+        for (User item : sort.sort(user)) {
+            assertThat(item.equals(orderExpected[i++]), is(true));
+        }
     }
 }
