@@ -1,5 +1,6 @@
 package ru.job4j.user;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -33,5 +34,31 @@ public class SortUser {
             result.add(item);
         }
         return result;
+    }
+
+    public List<User> sortNameLength(List<User> user) {
+        user.sort(
+                new Comparator<User>() {
+                    @Override
+                    public int compare(User user, User t1) {
+                        return user.getName().length() < t1.getName().length() ? -1 : 1;
+                    }
+                }
+        );
+        return user;
+    }
+
+
+    public List<User> sortByAllFields(List<User> user) {
+        user.sort(
+                new Comparator<User>() {
+                    @Override
+                    public int compare(User user, User t1) {
+                        int cur = user.getName().compareTo(t1.getName());
+                        return cur != 0 ? cur : Integer.compare(user.getAge(), t1.getAge());
+                    }
+                }
+        );
+        return user;
     }
 }
