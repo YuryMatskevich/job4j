@@ -12,7 +12,8 @@ import static org.junit.Assert.assertThat;
 public class CoffeeMachineTest {
     @Test
     public void whenGiveMoneyThenGetRaisingLikeArray() {
-        int[] cur = CoffeeMachine.changes(45, 17);
+        CoffeeMachine machine = new CoffeeMachine();
+        int[] cur = machine.changes(45, 17);
         int[] result = {10, 10, 5, 2, 1};
 
         for (int i = 0; i < 4; i++) {

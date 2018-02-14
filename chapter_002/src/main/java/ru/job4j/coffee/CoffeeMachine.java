@@ -10,7 +10,7 @@ import java.util.List;
 public class CoffeeMachine {
     private static final int[] RASING = {1, 2, 5, 10};
 
-    private static int[] converter(List<Integer> list) {
+    private int[] converter(List<Integer> list) {
         int[] array = new int[list.size()];
         int i = 0;
         for (Integer item : list) {
@@ -19,7 +19,7 @@ public class CoffeeMachine {
         return array;
     }
 
-    public static int[] changes(int value, int price) {
+    public int[] changes(int value, int price) {
         int cur = value - price;
         List<Integer> list = new ArrayList<>();
         for (int out = RASING.length - 1; out >= 0; out--) {
