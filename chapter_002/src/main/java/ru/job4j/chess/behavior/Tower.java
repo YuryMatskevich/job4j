@@ -17,16 +17,15 @@ public class Tower implements IChessMove {
         int signX = (dest.getX() - source.getX() < 0) ? -1 : 1;
         int signY = (dest.getY() - source.getY() < 0) ? -1 : 1;
         Cell[] way = new Cell[(deltaX == 0) ? deltaY : deltaX];
-        if ((deltaX == 0 & deltaY != 0) | (deltaY == 0 & deltaX != 0)) {
-            for (int i = 0, mull = 1; i < way.length; i++, mull++) {
-                if (deltaX == 0) {
-                    way[i] = new Cell(source.getX(), source.getY() + signY * mull);
-                } else {
-                    way[i] = new Cell(source.getX() + signX * mull, source.getY());
-                }
-            }
-        } else {
+        if (!((deltaX == 0 & deltaY != 0) | (deltaY == 0 & deltaX != 0))) {
             throw new ImpossibleMoveException("Недопустимый ход");
+        }
+        for (int i = 0, mull = 1; i < way.length; i++, mull++) {
+            if (deltaX == 0) {
+                way[i] = new Cell(source.getX(), source.getY() + signY * mull);
+            } else {
+                way[i] = new Cell(source.getX() + signX * mull, source.getY());
+            }
         }
         return way;
     }

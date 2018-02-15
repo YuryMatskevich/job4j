@@ -15,13 +15,12 @@ public class King implements IChessMove {
     public Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException {
         int deltaX = abs(dest.getX() - source.getX());
         int deltaY = abs(dest.getY() - source.getY());
-        Cell[] way = new Cell[1];
-        if ((deltaX == 1 & (deltaY == 0 | deltaY == 1)) | (deltaY == 1 & (deltaX == 0 | deltaX == 1))) {
-            iChessMove = new Queen();
-            way = iChessMove.way(source, dest);
-        } else {
+        Cell[] way;
+        if (!((deltaX == 1 & (deltaY == 0 | deltaY == 1)) | (deltaY == 1 & (deltaX == 0 | deltaX == 1)))) {
             throw new ImpossibleMoveException("Недопустимый ход");
         }
+        iChessMove = new Queen();
+        way = iChessMove.way(source, dest);
         return way;
     }
 }

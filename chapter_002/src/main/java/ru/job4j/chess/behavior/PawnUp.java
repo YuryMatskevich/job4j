@@ -14,12 +14,11 @@ public class PawnUp implements IChessMove {
     public Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException {
         int deltaX = dest.getX() - source.getX();
         int deltaY = dest.getY() - source.getY();
-        Cell[] way = new Cell[deltaX];
-        if (deltaY == 1 && deltaX == 0) {
-            way[0] = new Cell(source.getX(), source.getY() + deltaY);
-        } else {
+        Cell[] way = new Cell[deltaY];
+        if (!(deltaY == 1 && deltaX == 0)) {
             throw new ImpossibleMoveException("Недопустимый ход");
         }
+        way[0] = new Cell(source.getX(), source.getY() + deltaY);
         return way;
     }
 }

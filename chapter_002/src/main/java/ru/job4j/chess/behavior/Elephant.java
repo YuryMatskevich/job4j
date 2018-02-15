@@ -17,12 +17,11 @@ public class Elephant implements IChessMove {
         int signX = (dest.getX() - source.getX() < 0) ? -1 : 1;
         int signY = (dest.getY() - source.getY() < 0) ? -1 : 1;
         Cell[] way = new Cell[deltaX];
-        if (deltaX == deltaY) {
-            for (int i = 0, mull = 1; i < way.length; i++, mull++) {
-                way[i] = new Cell(source.getX() + signX * mull, source.getY() + signY * mull);
-            }
-        } else {
+        if (deltaX != deltaY) {
             throw new ImpossibleMoveException("Недопустимый ход");
+        }
+        for (int i = 0, mull = 1; i < way.length; i++, mull++) {
+            way[i] = new Cell(source.getX() + signX * mull, source.getY() + signY * mull);
         }
         return way;
     }

@@ -22,13 +22,12 @@ public class Queen implements IChessMove {
             iChessMove = new Elephant();
             way = iChessMove.way(source, dest);
         } else {
-            if ((deltaX == 0 & deltaY != 0) | (deltaY == 0 & deltaX != 0)) {
-                way = new Cell[(deltaX == 0) ? deltaY : deltaX];
-                iChessMove = new Tower();
-                way = iChessMove.way(source, dest);
-            } else {
+            if (!((deltaX == 0 & deltaY != 0) | (deltaY == 0 & deltaX != 0))) {
                 throw new ImpossibleMoveException("Недопустимый ход");
             }
+            way = new Cell[(deltaX == 0) ? deltaY : deltaX];
+            iChessMove = new Tower();
+            way = iChessMove.way(source, dest);
         }
         return way;
     }
