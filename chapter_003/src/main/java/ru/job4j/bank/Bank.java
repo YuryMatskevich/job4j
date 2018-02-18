@@ -29,40 +29,30 @@ public class Bank {
     }
 
     public void addAccountToUser(String passport, Account account) {
-        try {
+        if (findUserByPassport(passport) != null) {
             this.accounts.get(findUserByPassport(passport)).add(account);
-        } catch (NullPointerException npe) {
-            System.out.println("Пользователь с данным паспартом не существует");
         }
     }
 
     public void deleteAccountFromUser(String passport, Account account) {
-        try {
+        if (findUserByPassport(passport) != null) {
             this.accounts.get(findUserByPassport(passport)).remove(account);
-        } catch (NullPointerException npe) {
-            System.out.println("Пользователь с данным паспартом не существует");
         }
     }
 
     public List<Account> getUserAccounts(String passport) {
-        try {
-            return this.accounts.get(findUserByPassport(passport));
-        } catch (NullPointerException npe) {
-            return null;
-        }
+        return accounts.getOrDefault(findUserByPassport(passport), null);
     }
 
     private Account findAccountByRequisite(String passport, String srcRequisite) {
         Account cur = null;
-        try {
+        if (this.getUserAccounts(passport) != null) {
             for (Account account : this.getUserAccounts(passport)) {
                 if (account.getRequisites().equals(srcRequisite)) {
                     cur = account;
                     break;
                 }
             }
-        } catch (NullPointerException npe) {
-            return null;
         }
         return cur;
     }
