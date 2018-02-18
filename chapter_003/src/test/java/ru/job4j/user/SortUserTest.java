@@ -3,6 +3,7 @@ package ru.job4j.user;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -26,11 +27,7 @@ public class SortUserTest {
         user.add(user2);
         user.add(user3);
         user.add(user4);
-        User[] orderExpected = {user4, user3, user2, user1};
-        int i = 0;
-        for (User item : sort.sort(user)) {
-            assertThat(item.equals(orderExpected[i++]), is(true));
-        }
+        assertThat(sort.sort(user), is(Arrays.asList(user4, user3, user2, user1)));
     }
 
     @Test
@@ -47,11 +44,7 @@ public class SortUserTest {
         user.add(user3);
         user.add(user4);
         user.add(user5);
-        User[] orderExpected = {user2, user3, user5, user1, user4};
-        int i = 0;
-        for (User item : sort.sortNameLength(user)) {
-            assertThat(item.equals(orderExpected[i++]), is(true));
-        }
+        assertThat(sort.sortNameLength(user), is(Arrays.asList(user2, user3, user5, user1, user4)));
     }
 
     @Test
@@ -68,10 +61,6 @@ public class SortUserTest {
         user.add(user3);
         user.add(user4);
         user.add(user5);
-        User[] orderExpected = {user4, user1, user3, user2, user5};
-        int i = 0;
-        for (User item : sort.sortByAllFields(user)) {
-            assertThat(item.equals(orderExpected[i++]), is(true));
-        }
+        assertThat(sort.sortByAllFields(user), is(Arrays.asList(user4, user1, user3, user2, user5)));
     }
 }

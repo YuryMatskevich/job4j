@@ -22,6 +22,19 @@ public class User implements Comparable<User> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        boolean result = true;
+        if (o == null || this.getClass() != o.getClass()) {
+            result = false;
+        }
+        User other = (User) o;
+        if(this.name.equals(other.name) || this.age == other.age) {
+            result = true;
+        }
+        return result;
+    }
+
+    @Override
     public int compareTo(User user) {
         return Integer.compare(this.age, user.age);
     }
