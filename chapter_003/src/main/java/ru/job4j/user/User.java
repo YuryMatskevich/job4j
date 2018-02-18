@@ -28,10 +28,15 @@ public class User implements Comparable<User> {
             result = false;
         }
         User other = (User) o;
-        if(this.name.equals(other.name) || this.age == other.age) {
+        if (this.name.equals(other.name) || this.age == other.age) {
             result = true;
         }
         return result;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     @Override

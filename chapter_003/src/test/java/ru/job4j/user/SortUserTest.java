@@ -2,10 +2,7 @@ package ru.job4j.user;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -27,7 +24,12 @@ public class SortUserTest {
         user.add(user2);
         user.add(user3);
         user.add(user4);
-        assertThat(sort.sort(user), is(Arrays.asList(user4, user3, user2, user1)));
+        Set<User> result = new TreeSet<>();
+        result.add(user4);
+        result.add(user3);
+        result.add(user2);
+        result.add(user1);
+        assertThat(sort.sort(user), is(result));
     }
 
     @Test
