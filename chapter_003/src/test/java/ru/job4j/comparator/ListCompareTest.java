@@ -61,5 +61,15 @@ public class ListCompareTest {
         );
         assertThat(rst, is(2));
     }
+
+    @Test
+    public void whenOneOfLIstLessOtherThenMunisOne2() {
+        ListCompare compare = new ListCompare();
+        int rst = compare.compare(
+                Arrays.asList(10),
+                Arrays.asList(1, 2)
+        );
+        assertThat(rst, is(-1));
+    }
 }
 
