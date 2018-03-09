@@ -10,8 +10,7 @@ import java.util.NoSuchElementException;
 public class EventIterator implements Iterator {
 
     private final int[] values;
-    private int iHas = 0;
-    private boolean flag = false;
+    private int cur = 0;
 
     public EventIterator(final int[] values) {
         this.values = values;
@@ -19,15 +18,23 @@ public class EventIterator implements Iterator {
 
     @Override
     public boolean hasNext() {
-        if (!flag) {
-            while (iHas < values.length) {
-                if (values[iHas++] % 2 == 0) {
-                    flag = true;
-                    break;
+        boolean result = false;
+        int length = values.length;
+        if (cur == length) {
+            result = false;
+        } else {
+            if (values[cur] % 2 == 0) {
+                result = true;
+            } else {
+                while (cur < length - 1) {
+                    if (values[++cur] % 2 == 0) {
+                        result = true;
+                        break;
+                    }
                 }
             }
         }
-        return flag;
+        return result;
     }
 
     @Override
@@ -35,7 +42,6 @@ public class EventIterator implements Iterator {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        flag = false;
-        return values[iHas - 1];
+        return values[cur++];
     }
 }

@@ -59,5 +59,6 @@ public class EventIteratorTest {
         assertThat(it.next(), is(6));
         assertThat(it.hasNext(), is(true));
         assertThat(it.next(), is(8));
+        assertThat(it.hasNext(), is(false));
     }
 }
