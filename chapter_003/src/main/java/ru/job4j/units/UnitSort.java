@@ -43,15 +43,15 @@ class AscendingSort implements Comparator<String> {
 class DescendingSort implements Comparator<String> {
     @Override
     public int compare(String s, String t1) {
-       String[] split1 = s.split("\\\\");
-       String[] split2 = t1.split("\\\\");
+       String[] split1 = s.split("\\D+");
+       String[] split2 = t1.split("\\D+");
        int length1 = split1.length;
        int length2 = split2.length;
        int curent = 0;
-       for (int i = 0; i < Math.min(length1, length2); i++) {
-           int first = Integer.parseInt(split1[i].split("\\D+")[1]);
-           int second = Integer.parseInt(split2[i].split("\\D+")[1]);
-           if (first > second | (first == second & length1 < length2)) {
+       for (int i = 1; i < Math.min(length1, length2); i++) {
+           int number1 = Integer.parseInt(split1[i]);
+           int number2 = Integer.parseInt(split2[i]);
+           if (number1 > number2 | number1 == number2 & length1 < length2) {
                curent = -1;
            }
        }
