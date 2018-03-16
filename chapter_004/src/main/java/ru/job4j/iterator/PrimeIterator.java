@@ -10,8 +10,7 @@ import java.util.NoSuchElementException;
 public class PrimeIterator implements Iterator {
 
     private final int[] values;
-    private int iHas = 0;
-    private boolean flag = false;
+    private int cur = 0;
 
     public PrimeIterator(int[] values) {
         this.values = values;
@@ -37,15 +36,23 @@ public class PrimeIterator implements Iterator {
 
     @Override
     public boolean hasNext() {
-        if (!flag) {
-            while (iHas < values.length) {
-                if (checkPrimeNumber(iHas++)) {
-                    flag = true;
-                    break;
+        boolean result = false;
+        int length = values.length;
+        if (cur == length) {
+            result = false;
+        } else {
+            if (checkPrimeNumber(cur)) {
+                result = true;
+            } else {
+                while (cur < length - 1) {
+                    if (checkPrimeNumber(++cur)) {
+                        result = true;
+                        break;
+                    }
                 }
             }
         }
-        return flag;
+        return result;
     }
 
     @Override
@@ -53,7 +60,6 @@ public class PrimeIterator implements Iterator {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        flag = false;
-        return values[iHas - 1];
+        return values[cur++];
     }
 }
