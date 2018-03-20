@@ -79,4 +79,30 @@ public class NodeListIteratorTest {
     public void whenGetElemWithNegativeIndexThenException() {
         list.get(-1);
     }
+
+    @Test(expected = ConcurrentModificationException.class)
+    public void whenAddFirstThenElementsAddInTheStartOfList() {
+        NodeList<String> list = new NodeList<>();
+        list.addFirst("three");
+        list.addFirst("two");
+        it = list.iterator();
+        list.addFirst("one");
+        assertThat(list.get(0), is("one"));
+        assertThat(list.get(1), is("two"));
+        assertThat(list.get(2), is("three"));
+        it.next();
+    }
+
+    @Test(expected = ConcurrentModificationException.class)
+    public void whenDeleteFirstThenElementsDeleteFromTheStartOfList() {
+        NodeList<String> list = new NodeList<>();
+        list.addFirst("three");
+        list.addFirst("two");
+        list.addFirst("one");
+        it = list.iterator();
+        list.deleteFirst();
+        assertThat(list.get(0), is("two"));
+        assertThat(list.get(1), is("three"));
+        it.hasNext();
+    }
 }

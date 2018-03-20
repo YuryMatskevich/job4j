@@ -1,6 +1,7 @@
 package ru.job4j.list;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * @author Yury Matskevich
@@ -10,8 +11,7 @@ public class NodeList<E> implements ISimpleContainer<E> {
 
     private Node<E> first;
     private Node<E> last;
-    private int index = -1;
-    private int modCount = 0;
+    private int modCount = -1;
 
     public int getModCount() {
         return modCount;
@@ -26,7 +26,6 @@ public class NodeList<E> implements ISimpleContainer<E> {
             this.last.setNext(newNode);
         }
         this.last = newNode;
-        this.index++;
         this.modCount++;
     }
 
@@ -45,12 +44,37 @@ public class NodeList<E> implements ISimpleContainer<E> {
         return new NodeListIterator<>(this);
     }
 
+    public void addFirst(E e) {
+        Node<E> newNode = new Node<>(e);
+        if (this.isEmpty()) {
+            this.last = newNode;
+        }
+        newNode.setNext(this.first);
+        this.first = newNode;
+        this.modCount++;
+    }
+
+    public E deleteFirst() {
+        if (this.isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        Node<E> current = this.first;
+        if (current.getNext() == null) {
+            this.first = current.getNext();
+            this.last = current.getNext();
+        } else {
+            this.first = current.getNext();
+        }
+        this.modCount--;
+        return current.getElem();
+    }
+
     private boolean isEmpty() {
         return (first == null & last == null);
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index > this.index) {
+        if (index < 0 || index > this.modCount) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
