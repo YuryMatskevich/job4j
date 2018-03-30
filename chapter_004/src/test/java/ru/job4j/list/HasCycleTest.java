@@ -51,6 +51,19 @@ public class HasCycleTest {
     }
 
     @Test
+    public void whenThereIsCycleInTheMiddleOfListThenMethodReturnsTrue() {
+        Node first = new Node(1);
+        Node two = new Node(2);
+        Node third = new Node(3);
+        Node four = new Node(4);
+        first.next = two;
+        two.next = third;
+        third.next = four;
+        four.next = third;
+        assertThat(this.hasCycle(first), is(true));
+    }
+
+    @Test
     public void whenThereIsNotCycleThenMethodReturnsFalse() {
         Node first = new Node(1);
         Node two = new Node(2);
