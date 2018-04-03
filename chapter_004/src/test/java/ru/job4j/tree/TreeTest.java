@@ -13,8 +13,8 @@ import static org.junit.Assert.*;
  * @since 0.1
  */
 public class TreeTest {
-    Tree<Integer> tree;
-    Iterator<Integer> it;
+    private Tree<Integer> tree;
+    private Iterator<Integer> it;
 
     @Before
     public void setUp() {
@@ -92,5 +92,21 @@ public class TreeTest {
     public void whenModifiedTreeAndContinueUseIteratorThenConcurrentModificationException() {
         tree.add(1, 100);
         it.next();
+    }
+
+    @Test
+    public void whenTreeIsNotBinatyThenFalse() {
+        assertThat(tree.isBinary(), is(false));
+    }
+
+    @Test
+    public void whenTreeIsBinatyThenTrue() {
+        Tree<String> tree = new Tree<>("one");
+        tree.add("one", "two");
+        tree.add("one", "three");
+        tree.add("two", "four");
+        tree.add("two", "five");
+        tree.add("three", "six");
+        assertThat(tree.isBinary(), is(true));
     }
 }

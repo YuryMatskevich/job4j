@@ -48,6 +48,18 @@ public class Tree<E extends Comparable<E>> implements SimpleTree<E> {
         return new TreeIterator();
     }
 
+    public boolean isBinary() {
+        NodeSequential sequential = new NodeSequential(root);
+        boolean result = true;
+        while (sequential.hasNext()) {
+            if (sequential.next().leaves().size() > 2) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
+
     private class NodeSequential {
         private Stack<ListIterator<Node<E>>> iterators = new Stack<>();
         private Stack<Node<E>> stackParent = new Stack<>();
