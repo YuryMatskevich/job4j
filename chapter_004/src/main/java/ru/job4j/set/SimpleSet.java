@@ -19,11 +19,19 @@ public class SimpleSet<E> implements Iterable<E> {
     }
 
     public void add(E e) {
+        if (!contains(e)) {
+            array.add(e);
+        }
+    }
+
+    public boolean contains(E e) {
+        boolean result = false;
         for (E item : array) {
-            if (e == item) {
-                return;
+            if (e.equals(item)) {
+                result = true;
+                break;
             }
         }
-        array.add(e);
+        return result;
     }
 }
