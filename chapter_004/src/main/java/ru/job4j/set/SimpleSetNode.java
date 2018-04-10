@@ -20,11 +20,19 @@ public class SimpleSetNode<E> implements Iterable<E> {
     }
 
     public void add(E e) {
+        if (!contains(e)) {
+            nodeList.add(e);
+        }
+    }
+
+    public boolean contains(E e) {
+        boolean result = false;
         for (E item : nodeList) {
-            if (e == item) {
-                return;
+            if (e.equals(item)) {
+                result = true;
+                break;
             }
         }
-        nodeList.add(e);
+        return result;
     }
 }
