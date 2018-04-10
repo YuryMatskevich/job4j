@@ -1,5 +1,6 @@
 package ru.job4j.set;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -15,20 +16,33 @@ import static org.junit.Assert.*;
  * @since 0.1
  */
 public class SimpleSetTest {
+    SimpleSet<String> set;
+    Iterator<String> it;
 
-    @Test(expected = NoSuchElementException.class)
-    public void showSet() {
-        SimpleSet<String> set = new SimpleSet<>();
+    @Before
+    public void setUp() {
+        set = new SimpleSet<>();
         set.add("first");
         set.add("first");
         set.add("first");
         set.add("second");
         set.add("second");
         set.add("third");
-        Iterator<String> it = set.iterator();
+        it = set.iterator();
+    }
+
+    @Test
+    public void whenAddElementThenIsAddedOnlyUniqueElement() {
         assertThat(it.next(), is("first"));
         assertThat(it.next(), is("second"));
         assertThat(it.next(), is("third"));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void whenIteratorDoesNotHaveAnyMoreElementThenNoSuchElementException() {
+        it.next();
+        it.next();
+        it.next();
         it.next();
     }
 }
