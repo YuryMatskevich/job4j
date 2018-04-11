@@ -14,14 +14,16 @@ public class ThreadTest {
     @Test
     public void testThread() {
         String path = "..\\.gitignore";
-        new NewThread(new SearchWord(path));
-        new NewThread(new SearchButton(path));
+        System.out.format("Программа по подсчету пробелов и слов в текстовом файле: %s%n",path);
+        NewThread tread1 = new NewThread(new SearchWord(path));
+        NewThread tread2 = new NewThread(new SearchButton(path));
 
         try {
-            Thread.sleep(5000);
+            tread1.getThread().join();
+            tread2.getThread().join();
         } catch (InterruptedException e) {
             System.out.println("Главный поток прерван");
         }
-        System.out.println("Главный поток завешен");
+        System.out.println("Программа завершена");
     }
 }
