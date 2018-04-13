@@ -14,7 +14,7 @@ public class ThreadTest {
     @Test
     public void testThread() {
         String path = "..\\.gitignore";
-        System.out.format("Программа по подсчету пробелов и слов в текстовом файле: %s%n",path);
+        System.out.format("Программа по подсчету пробелов и слов в текстовом файле: %s%n", path);
         NewThread tread1 = new NewThread(new SearchWord(path));
         NewThread tread2 = new NewThread(new SearchButton(path));
 
