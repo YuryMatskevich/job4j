@@ -2,6 +2,7 @@ package ru.job4j.threads;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -30,6 +31,7 @@ public class CountCharTest {
         System.setOut(this.stdout);
     }
 
+    @Ignore
     @Test
     public void whenTimeEndedFirstly() {
         new CountWithTime(path, 100000).go();
@@ -45,6 +47,7 @@ public class CountCharTest {
         );
     }
 
+    @Ignore
     @Test
     public void whenCounterEndedFirtly() {
         new CountWithTime(path, 2000).go();
