@@ -35,7 +35,7 @@ public class SimpleBlockingQueue<T> {
             }
             System.out.println("Offer: " + value);
             queue.offer(value);
-            notify();
+            notifyAll();
         }
     }
 
@@ -50,7 +50,7 @@ public class SimpleBlockingQueue<T> {
             }
             T result = queue.poll();
             System.out.println("Poll: " + result);
-            notify();
+            notifyAll();
             return result;
         }
     }
