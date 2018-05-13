@@ -30,7 +30,7 @@ public class SimpleBlockingQueue<T> {
                 try {
                     wait();
                 } catch (InterruptedException e) {
-                    System.out.println("Прерывание");
+					System.out.println("Прерывание");
                 }
             }
             System.out.println("Offer: " + value);
@@ -45,7 +45,8 @@ public class SimpleBlockingQueue<T> {
                 try {
                     wait();
                 } catch (InterruptedException e) {
-                    System.out.println("Прерывание");
+                    Thread.currentThread().interrupt();
+                    break;
                 }
             }
             T result = queue.poll();

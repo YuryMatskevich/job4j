@@ -81,7 +81,7 @@ public class ThreadPoolTest {
 
         for (String item : strings) {
             String[] cond = item.split(" ");
-			if (item.equals("Прерывание")) {
+			if (item.equals("Poll: null")) {
 				continue;
 			}
 			if (cond[0].equals("Offer:")) {

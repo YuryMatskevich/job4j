@@ -34,8 +34,11 @@ public class ThreadPool {
     private class PoolWorker extends Thread {
         @Override
         public void run() {
-        	while (true) {
-				queue.poll().run();
+        	while (!isInterrupted()) {
+        		Work work = queue.poll();
+        		if (work != null) {
+					work.run();
+				}
 			}
         }
     }
