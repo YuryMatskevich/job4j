@@ -17,7 +17,10 @@ import static org.junit.Assert.*;
  * @since 0.1
  */
 public class CountCharTest {
-    private String path = "..\\.gitignore";
+	private String path = getClass()
+			.getClassLoader()
+			.getResource(".gitignore")
+			.getPath();
     private final PrintStream stdout = System.out;
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -31,7 +34,6 @@ public class CountCharTest {
         System.setOut(this.stdout);
     }
 
-    @Ignore
     @Test
     public void whenTimeEndedFirstly() {
         new CountWithTime(path, 100000).go();
@@ -41,13 +43,12 @@ public class CountCharTest {
                         new StringJoiner(System.lineSeparator(), "", System.lineSeparator())
                                 .add("Подсчет слов - ЗАПУСК")
                                 .add("Таймер - ЗАПУСК")
-                                .add("Общее количество символов: 318")
+                                .add("Общее количество символов: 292")
                                 .add("Главные поток - ЗАВЕРШЕНИЕ").toString()
                 )
         );
     }
 
-    @Ignore
     @Test
     public void whenCounterEndedFirtly() {
         new CountWithTime(path, 2000).go();
