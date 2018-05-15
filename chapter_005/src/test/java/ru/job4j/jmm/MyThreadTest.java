@@ -2,6 +2,7 @@ package ru.job4j.jmm;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -28,6 +29,7 @@ public class MyThreadTest {
      * выводу в консоль.
      * @throws InterruptedException
      */
+    @Ignore
     @Test
     public void testPrint() throws InterruptedException {
         Text text = new Text();
