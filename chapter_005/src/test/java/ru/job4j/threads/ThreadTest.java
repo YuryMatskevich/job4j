@@ -11,11 +11,13 @@ import static org.junit.Assert.*;
  * @since 0.1
  */
 public class ThreadTest {
+	private String path = getClass()
+			.getClassLoader()
+			.getResource("file.txt")
+			.getPath();
 
-    @Ignore
     @Test
     public void testThread() {
-        String path = "..\\.gitignore";
         System.out.format("Программа по подсчету пробелов и слов в текстовом файле: %s%n", path);
         NewThread tread1 = new NewThread(new SearchWord(path));
         NewThread tread2 = new NewThread(new SearchButton(path));

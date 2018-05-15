@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 public class CountCharTest {
 	private String path = getClass()
 			.getClassLoader()
-			.getResource(".gitignore")
+			.getResource("file.txt")
 			.getPath();
     private final PrintStream stdout = System.out;
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -35,7 +35,7 @@ public class CountCharTest {
     }
 
     @Test
-    public void whenTimeEndedFirstly() {
+    public void whenCounterEndedFirstly() {
         new CountWithTime(path, 100000).go();
         assertThat(
                 new String(out.toByteArray()),
@@ -43,15 +43,15 @@ public class CountCharTest {
                         new StringJoiner(System.lineSeparator(), "", System.lineSeparator())
                                 .add("Подсчет слов - ЗАПУСК")
                                 .add("Таймер - ЗАПУСК")
-                                .add("Общее количество символов: 292")
+                                .add("Общее количество символов: 11")
                                 .add("Главные поток - ЗАВЕРШЕНИЕ").toString()
                 )
         );
     }
 
     @Test
-    public void whenCounterEndedFirtly() {
-        new CountWithTime(path, 2000).go();
+    public void whenTimeEndedFirtly() {
+        new CountWithTime(path, 1).go();
         assertThat(
                 new String(out.toByteArray()),
                 is(
