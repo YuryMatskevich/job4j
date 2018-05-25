@@ -39,8 +39,9 @@ public class NotBlockingMemoryTest {
 	public void whenFirstThreadUpdatedInformationAndSecondThradTryToUpdateInformationBeforeFirstOneDidNotEnd()
 			throws InterruptedException {
 		NotBlockingMemory<String> memory = new NotBlockingMemory<>();
-		String s1 = "First";
-		String s2 = "Second";
+		String s1 = "Date";
+		String s2 = "FirstEdit";
+		String s3 = "SecondEdit";
 		memory.add(1, s1);
 
 		Thread thread1 = new Thread() {
@@ -58,21 +59,20 @@ public class NotBlockingMemoryTest {
 			@Override
 			public void run() {
 				try {
-					memory.update(1, s2);
+					memory.update(1, s3);
 				} catch (OptimisticException e) {
 					flag = true;
 				}
 			}
 		};
-		/*thread2 после считывания записи с id = 1 ожидает 1000 мс,
-		а в это время thread1 обновляет данные в записи
-		c id = 1. После пробуждения thread2 продолжает работу(затирает
-		данные, обнавленные thread1), что приводит к OptimisticException,
+		/*Пока thread2 спит(предварительно считав данные), thread1 успевает прочитать и обновить данные
+		(разница времени сна) задачи с id = 1. После пробуждения thread2, он(thread2) продолжает работу(затирает
+		данные, обновленные thread1), что приводит к OptimisticException в этом потоке (thread2),
 		а само хранилище возвращается к состоянию, в котором запись с id = 1
 		модифицирована только thread1.
 		 */
+		thread1.setName("200");
 		thread2.setName("1000");
-		thread1.setName("1");
 		thread1.start();
 		thread2.start();
 		thread1.join();

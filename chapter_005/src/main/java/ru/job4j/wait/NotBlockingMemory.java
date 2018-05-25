@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class NotBlockingMemory<T> {
 	private ConcurrentHashMap<Integer, Model> map = new ConcurrentHashMap<>();
-	private ConcurrentHashMap<Integer, Model> mapCopy = new ConcurrentHashMap<>();
 
 	public boolean add(int id, T entity) {
 		return map.putIfAbsent(id, new Model(entity)) == null;
@@ -37,13 +36,13 @@ public class NotBlockingMemory<T> {
 			} catch (InterruptedException e) {
 				//
 			}
-			mapCopy.putAll(map);
-			if (map.computeIfPresent(id,
-					(key, value)
-							-> version != value.getVersion()
-							? new Model(null)
-							: model.modify(entity)).store == null) {
-				map = mapCopy; //
+			if (
+					!(map.computeIfPresent(id,
+						(key, value) ->
+								version != value.getVersion()
+										? value
+										: model.modify(entity))
+					).store.equals(entity)) {
 				throw new OptimisticException("Optimistic exception");
 			}
 			result = true;
