@@ -1,4 +1,1 @@
-This is a simple text for testing class called WordIndex.
-It creates index for a loaded text file via a method called loadFile.
-Then we can get a set of position of a current word when we are invoking a method getIndexes4Word.
-But if the loaded text does not have any current word so it will return null.
+This is a simple text for testing class called WordIndex It creates index for a loaded text file via a method called loadFile Then we can get a set of position of a current word when we are invoking a method getIndexes4Word But if the loaded text does not have any current word so it will return null
