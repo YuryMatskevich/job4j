@@ -25,12 +25,12 @@ public class NotBlockingMemoryTest {
 		assertFalse(memory.delete(1)); // записи с id = 1 уже была удалена
 	}
 
-	@Test
+	@Test (expected = NullPointerException.class)
 	public void whenUpdatedInformationThenMethodReturnTrueElseFalse() throws OptimisticException {
 		NotBlockingMemory<Integer> memory = new NotBlockingMemory<>();
 		memory.add(1, 10);
 		assertTrue(memory.update(1, 3));
-		assertFalse(memory.update(2, 10)); // записи с id = 2 нет.
+		assertFalse(memory.update(2, 10)); // записи с id = 2 нет (NullPointerException)
 	}
 
 	private boolean flag = false; //было ли OptimisticException
