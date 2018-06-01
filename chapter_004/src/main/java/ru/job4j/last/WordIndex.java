@@ -16,9 +16,11 @@ public class WordIndex {
 		Scanner scanner = null;
 		try {
 			scanner = new Scanner(new File(filename));
-			int count = 0; //подсчет позиции слова
+			int count = 0;
 			while (scanner.hasNext()) {
-				indexes.insert(scanner.next().split("\\W")[0].toLowerCase(), ++count);
+				String cur = scanner.next().split("\\W")[0].toLowerCase();
+				indexes.insert(cur, count);
+				count += cur.length() + 1;
 			}
 		} finally {
 			if (scanner != null) {
