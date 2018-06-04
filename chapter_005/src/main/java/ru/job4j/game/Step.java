@@ -1,4 +1,4 @@
-package ru.job4j.bomberman;
+package ru.job4j.game;
 
 /**
  * @author Yury Matskevich
