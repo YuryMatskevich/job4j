@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class NotBlockingMemory<T> {
 	private ConcurrentHashMap<Integer, Model> map = new ConcurrentHashMap<>();
-	private ConcurrentHashMap<Integer, Model> mapCopy = new ConcurrentHashMap<>();
 
 	public boolean add(int id, T entity) {
 		return map.putIfAbsent(id, new Model(entity)) == null;
@@ -19,36 +18,37 @@ public class NotBlockingMemory<T> {
 	}
 
 	public boolean update(int id, T entity) throws OptimisticException {
-		boolean result = false;
-		if (map.containsKey(id)) {
-			Model model = map.get(id);
-			int version = model.getVersion();
-			/*
-			Данный блок не входит в логику программы, добавлен лишь для того,
-			чтоб обеспечить повторяемость результатов при демонстрации затирания
-			данных одним пользователем, в то время как другой уже сделал изменения.
-			 */
+		Model model = map.get(id);
+		int version = model.getVersion();
+		waitForSomeSeconds(); //обеспечить повторяемость результатов при затирании
+		if (
+				!(map.computeIfPresent(id,
+						(key, value) ->
+								version != value.getVersion()
+										? value
+										: model.modify(entity))
+				).store.equals(entity)) {
+			throw new OptimisticException("Optimistic exception");
+		}
+		return true;
+	}
+
+	/**
+	 * Данный метод, добавлен лишь для того, чтоб обеспечить повторяемость
+	 * результатов при демонстрации затирания данных одним пользователем,
+	 * в то время как другой уже сделал изменения.
+	 */
+	private void waitForSomeSeconds() {
+		try {
 			try {
-				try {
-					Thread.sleep(Integer.parseInt(Thread.currentThread().getName()));
-				} catch (NumberFormatException nfe) {
-					//
-				}
-			} catch (InterruptedException e) {
+				//поток заснет на время
+				Thread.sleep(Integer.parseInt(Thread.currentThread().getName()));
+			} catch (NumberFormatException nfe) {
 				//
 			}
-			mapCopy.putAll(map);
-			if (map.computeIfPresent(id,
-					(key, value)
-							-> version != value.getVersion()
-							? new Model(null)
-							: model.modify(entity)).store == null) {
-				map = mapCopy; //
-				throw new OptimisticException("Optimistic exception");
-			}
-			result = true;
+		} catch (InterruptedException e) {
+			//
 		}
-		return result;
 	}
 
 	private class Model {
