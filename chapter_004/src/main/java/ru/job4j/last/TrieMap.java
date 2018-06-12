@@ -11,28 +11,40 @@ public class TrieMap {
 
 	public Set<Integer> getPosition(String string) {
 		Node cur = search(string);
-		return cur == null || cur.positions.isEmpty() ? null : cur.positions;
+		return cur == null ? null : cur.positions;
 	}
 
-	public void insert(String string, int position) {
-		char first = string.charAt(0);
-		if (!roots.containsKey(first)) {
-			roots.put(first, new Node());
+	public void insert(String s1, int pos) {
+		int position = pos;
+		String string = s1;
+		for (int i = 0; i < s1.length(); i++) {
+			char first = string.charAt(0);
+			if (!roots.containsKey(first)) {
+				Node new1 = new Node();
+				new1.positions.add(position);
+				roots.put(first, new1);
+			} else {
+				roots.get(first).positions.add(position);
+			}
+			if (string.length() == 1 & roots.containsKey(first)) {
+				roots.get(first).positions.add(position);
+			} else {
+				insertWord(string.substring(1), roots.get(string.charAt(0)), position);
+				string = s1.substring(i + 1);
+				position++;
+			}
 		}
-		if (string.length() == 1 & roots.containsKey(first)) {
-			roots.get(first).positions.add(position);
-			return;
-		}
-		insertWord(string.substring(1), roots.get(string.charAt(0)), position);
 	}
 
 	private void insertWord(String string, Node node, int position) {
 		final Node nextChild;
 		if (node.children.containsKey(string.charAt(0))) {
 			nextChild = node.children.get(string.charAt(0));
+			nextChild.positions.add(position);
 		} else {
 			nextChild = new Node();
 			node.children.put(string.charAt(0), nextChild);
+			nextChild.positions.add(position);
 		}
 		if (string.length() == 1) {
 			nextChild.positions.add(position);
@@ -53,7 +65,7 @@ public class TrieMap {
 	}
 
 	private Node searchFor(String string, Node node) {
-		if (string.length() == 0 | node == null) {
+		if (string.length() == 0) {
 			return node;
 		}
 		char first = string.charAt(0);

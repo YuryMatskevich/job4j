@@ -3,7 +3,7 @@ package ru.job4j.last;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -25,10 +25,36 @@ public class TrieMapTest {
 		index.loadFile(path);
 	}
 
+	//Текст в файлу в строку
+	private String convertFileToString() throws IOException {
+		DataInputStream dis = new DataInputStream(new FileInputStream(path));
+		byte[] bytes = new byte[dis.available()];
+		dis.readFully(bytes);
+		return new String(bytes, 0, bytes.length);
+	}
+
+	//получаем все вхождения subStr в тексте text с помощью метода indexOf()
+	private Set<Integer> getAllSubString(String subStr) throws IOException {
+		String text = convertFileToString();
+		Set<Integer> result = new TreeSet<>();
+		int lastIndex = 0;
+		while (lastIndex != -1) {
+			lastIndex = text.indexOf(subStr, lastIndex);
+			if (lastIndex != -1) {
+				result.add(lastIndex);
+				lastIndex++;
+			}
+		}
+		if (result.size() == 0) {
+			result = null;
+		}
+		return result;
+	}
+
 	@Test
-	public void whenSearchForWordWhichConsistsOfOneLatterAndExistsInLoadedText() {
-		Set<Integer> setExpected = new TreeSet<>(Arrays.asList(3, 15, 20, 28, 33, 40));
-		assertEquals(index.getIndexes4Word("a"), setExpected);
+	public void whenSearchForWordWhichConsistsOfOneLatterAndExistsInLoadedText() throws IOException {
+		String search = "a";
+		assertEquals(index.getIndexes4Word(search), getAllSubString(search));
 	}
 
 	@Test
@@ -37,19 +63,9 @@ public class TrieMapTest {
 	}
 
 	@Test
-	public void whenSearchForWordWhichConsistsOfOneLatterAndDoesNotExistAndThereIsAtLeasOneWordWhichBeginsWithThisLatterInLoadedText() {
-		assertNull(index.getIndexes4Word("m"));
-	}
-
-	@Test
-	public void whenSearchForWordWhichExistsInLoadedTextThenReturnsSetOfPositionThisWordInTheText() {
-		Set<Integer> setExpected = new TreeSet<>(Arrays.asList(9, 22));
-		assertEquals(index.getIndexes4Word("called"), setExpected);
-	}
-
-	@Test
-	public void whenSearchForWordWhichDoesNotExistInLoadedTextButItBeginsLikeOtherExistingWordThenReturnsNull() {
-		assertNull(index.getIndexes4Word("callider"));
+	public void whenSearchForWordWhichExistsInLoadedTextThenReturnsSetOfPositionThisWordInTheText() throws IOException {
+		String search = "washes";
+		assertEquals(index.getIndexes4Word(search), getAllSubString(search));
 	}
 
 	@Test

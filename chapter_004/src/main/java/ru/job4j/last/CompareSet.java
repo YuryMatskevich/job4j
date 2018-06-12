@@ -1,25 +1,24 @@
 package ru.job4j.last;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * @author Yury Matskevich
  * @since 0.1
  */
-public class CompareSet<T extends Comparable> {
-	private T[] firstSet;
-	private T[] secondSet;
+public class CompareSet<T> {
+	private Map<T, Integer> set1 = new HashMap<>();
+	private Map<T, Integer> set2 = new HashMap<>();
 
-	public CompareSet(T[] firstSet, T[] secondSet) {
-		this.firstSet = firstSet;
-		this.secondSet = secondSet;
+	public boolean equalSet(T[] firstSet, T[] secondSet) {
+		fillSet(firstSet, set1);
+		fillSet(secondSet, set2);
+		return set1.equals(set2);
 	}
 
-	public boolean equalSet() {
-		Set<T> set1 = new TreeSet<>(Arrays.asList(firstSet));
-		Set<T> set2 = new TreeSet<>(Arrays.asList(secondSet));
-		return set1.equals(set2);
+	private void fillSet(T[] list, Map<T, Integer> set) {
+		for (T item : list) {
+			set.put(item, set.getOrDefault(item, 0) + 1);
+		}
 	}
 }
