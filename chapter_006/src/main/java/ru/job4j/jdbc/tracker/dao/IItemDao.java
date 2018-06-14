@@ -11,7 +11,7 @@ public interface IItemDao {
 	 * @param item an item for adding
 	 * @return true - if an item added to a store, else - false
 	 */
-	boolean add(Item item);
+	Item add(Item item);
 
 	/**
 	 * to update an item which exists in a store
@@ -19,13 +19,13 @@ public interface IItemDao {
 	 * @param item a new item which will modify wanted item
 	 * @return a modified item
 	 */
-	Item update(String id, Item item);
+	Item update(int id, Item item);
 
 	/**
 	 * to delete an item from a store
 	 * @param id an id of item for deleting
 	 */
-	void delete(String id);
+	void delete(int id);
 
 	/**
 	 * to get all the items which exist in a store
@@ -48,7 +48,12 @@ public interface IItemDao {
 	 * @return a list of items if there are items with the id,
 	 * otherwise null
 	 */
-	Item findById(String id);
+	Item findById(int id);
 
-
+	/**
+	 * to write comment to the item with current id
+	 * @param id an id of item where will be written a comment
+	 * @param comment
+	 */
+	void writeComment(int id, String comment);
 }

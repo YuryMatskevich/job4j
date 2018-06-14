@@ -2,13 +2,12 @@ package ru.job4j.jdbc.tracker.connect;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.job4j.jdbc.tracker.load.LoadResource;
 
-import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 
 /**
  * This class is for getting a connection to the
@@ -23,47 +22,27 @@ public class PostgreDb implements IConnection {
 	private String name;
 	private String username;
 	private String password;
-	private String pathScripDb;
-	private String pathScripStructur;
+	private String createDb;
+	private String createStructure;
 
-	public PostgreDb(String path,
-					 String pathScripDb,
-					 String pathScripStructur) {
-		storeConnectionDate(new File(path));
-		this.pathScripDb = pathScripDb;
-		this.pathScripStructur = pathScripStructur;
+	/**
+	 * Create {@code PostgreDb} class for fetting
+	 * connection to the database
+	 *
+	 * @param config a file with setting
+	 */
+	public PostgreDb(String config) {
+		LoadResource res = new LoadResource(config);
+		path = res.getProperty("db.path");
+		name = res.getProperty("db.name");
+		username = res.getProperty("db.username");
+		password = res.getProperty("db.password");
+		createDb = res.getProperty("db.createDbScript");
+		createStructure = res.getProperty("db.createStructure");
 	}
 
-	private void storeConnectionDate(File file) {
-		try (FileInputStream fis = new FileInputStream(file)) {
-			Properties dbProperties = new Properties();
-			dbProperties.load(fis);
-			path = dbProperties.getProperty("db.path");
-			name = dbProperties.getProperty("db.name");
-			username = dbProperties.getProperty("db.username");
-			password = dbProperties.getProperty("db.password");
-		} catch (IOException e) {
-			LOG.error(e.getMessage(), e);
-		}
-	}
-
-	private String getQuery(String path) {
-		StringBuilder contentBuilder = new StringBuilder();
-		try (BufferedReader br = new BufferedReader(
-				new FileReader(path))) {
-			String sCurrentLine;
-			while ((sCurrentLine = br.readLine()) != null) {
-				contentBuilder.append(sCurrentLine).append("\n");
-			}
-		} catch (IOException e) {
-			LOG.error(e.getMessage(), e);
-		}
-		return contentBuilder.toString();
-	}
-
-	private Connection getConnection(String url,
-									 String username,
-									 String password) {
+	//return connection
+	private Connection getConnection(String url) {
 		Connection conn = null;
 		try {
 			conn = DriverManager.getConnection(
@@ -77,40 +56,43 @@ public class PostgreDb implements IConnection {
 		return conn;
 	}
 
+	//executing a SQL script for current connection
+	private void executeScript(Connection conn, String query) {
+		try (Statement st = conn.createStatement()) {
+			st.execute(query);
+		} catch (SQLException e) {
+			LOG.error(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * The method for connecting to a user database
+	 * if it exists or create the user database and connection to it
+	 *
+	 * @return a connection to the database
+	 */
 	@Override
 	public Connection connect() {
 		Connection conn;
-		Statement statement;
 		try {
+			// try to connect with a user db if it exists
 			conn = DriverManager.getConnection(
-					String.format("%s%s?currentSchema = public", path, name),
-					username,
-					password
-			);
-		} catch (Exception e) {
-			conn = getConnection(
-					String.format("%s%s", path, "postgres"),
-					username,
-					password
-			);
-			try {
-				statement = conn.createStatement();
-				statement.execute(getQuery(pathScripDb));
-				conn.close();
-			} catch (SQLException e1) {
-				LOG.error(e.getMessage(), e);
-			}
-			conn = getConnection(
 					String.format("%s%s", path, name),
 					username,
 					password
 			);
+		} catch (Exception e) {
+			// if there is not a user db so try to connect with
+			// a standart db(postgres) to create the user db
+			conn = getConnection(String.format("%s%s", path, "postgres"));
+			executeScript(conn, createDb); // create a user db
 			try {
-				statement = conn.createStatement();
-				statement.execute(getQuery(pathScripStructur));
+				conn.close();
 			} catch (SQLException e1) {
-				LOG.error(e.getMessage(), e);
+				LOG.error(e.getMessage(), e1);
 			}
+			conn = getConnection(String.format("%s%s", path, name));
+			executeScript(conn, createStructure); // create a user db structure
 		}
 		return conn;
 	}

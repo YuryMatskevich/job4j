@@ -1,11 +1,8 @@
 package ru.job4j.jdbc.tracker;
 
-import ru.job4j.jdbc.tracker.connect.IConnection;
 import ru.job4j.jdbc.tracker.dao.IItemDao;
 import ru.job4j.jdbc.tracker.dao.Item;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.util.List;
 
 /**
@@ -18,15 +15,15 @@ public class Tracker {
 		this.itemDao = itemDao;
 	}
 
-	public boolean add(Item item) {
+	public Item add(Item item) {
 		return itemDao.add(item);
 	}
 
-	Item update(String id, Item item) {
+	Item update(int id, Item item) {
 		return itemDao.update(id, item);
 	}
 
-	public void delete(String id) {
+	public void delete(int id) {
 		itemDao.delete(id);
 	}
 
@@ -38,7 +35,11 @@ public class Tracker {
 		return itemDao.findByName(key);
 	}
 
-	public Item findById(String id) {
+	public Item findById(int id) {
 		return itemDao.findById(id);
+	}
+
+	public void writeComment(int id, String comment) {
+		itemDao.writeComment(id, comment);
 	}
 }

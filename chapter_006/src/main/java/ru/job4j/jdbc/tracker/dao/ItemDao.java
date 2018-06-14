@@ -26,82 +26,87 @@ public class ItemDao implements IItemDao {
 	}
 
 	@Override
-	public boolean add(Item item) {
-		boolean result = true;
-		try (Connection conn = typeConn.connect()) {
-			PreparedStatement st = conn.prepareStatement(
-					"INSERT INTO ITEMS (name_i, description_i, create_i)"
-							+ " VALUES (?, ?, ?);"
-			);
+	public Item add(Item item) {
+		String query =
+				"INSERT INTO items (name_i, description_i, create_i) "
+				+ "VALUES (?, ?, ?)";
+		try (Connection conn = typeConn.connect();
+			 PreparedStatement st = conn.prepareStatement(query)) {
 			st.setString(1, item.getName());
 			st.setString(2, item.getDescription());
 			st.setDate(3, item.getCreate());
 			st.executeUpdate();
-			st.close();
 		} catch (SQLException e) {
 			LOG.error(e.getMessage(), e);
-			result = false;
 		}
-		return result;
+		return item;
 	}
 
 	@Override
-	public Item update(String id, Item item) {
-		return null;
+	public Item update(int id, Item item) {
+		String query =
+				"UPDATE items "
+				+ "SET "
+				+ "name_i = ?, "
+				+ "description_i = ?, "
+				+ "create_i = ?"
+				+ "WHERE id_i = ?;";
+		try (Connection conn = typeConn.connect();
+			 PreparedStatement st = conn.prepareStatement(query)) {
+			st.setString(1, item.getName());
+			st.setString(2, item.getDescription());
+			st.setDate(3, item.getCreate());
+			st.setInt(4, id);
+			st.executeUpdate();
+		} catch (SQLException e) {
+			LOG.error(e.getMessage(), e);
+		}
+		return item;
 	}
 
 	@Override
-	public void delete(String id) {
-
+	public void delete(int id) {
+		String query = "DELETE FROM items WHERE id_i = ?";
+		try (Connection conn = typeConn.connect();
+			 PreparedStatement st = conn.prepareStatement(query)) {
+			st.setInt(1, id);
+			st.executeUpdate();
+		} catch (SQLException e) {
+			LOG.error(e.getMessage(), e);
+		}
 	}
 
 	@Override
 	public List<Item> findAll() {
-		List<Item> items = null;
-		try (Connection conn = typeConn.connect()) {
-			String query =
-					"SELECT i.id_i, i.name_i, i.description_i, i.create_i, co.comment_c "
-							+ "FROM items i LEFT JOIN commentss co "
-							+ "ON i.id_i = co.id_i;";
-			PreparedStatement st = conn.prepareStatement(query);
-			ResultSet rs = st.executeQuery();
-			Map<Integer, Item> map = new HashMap<>();
-			Item item;
-			while (rs.next()) {
-				int id = rs.getInt("id_i");
-				item = map.get(id);
-				if (item == null) {
-					item = new Item();
-					item.setId(id);
-					item.setName(rs.getString("name_i"));
-					item.setDescription(rs.getString("description_i"));
-					item.setCreate(rs.getDate("create_i"));
-					map.put(id, item);
-				}
-				String comment = rs.getString("comment_c");
-				if (comment != null) {
-					if (item.getComments() == null) {
-						item.setComments(new ArrayList<>());
-					}
-					item.getComments().add(comment);
-				}
-			}
-			items = map.isEmpty() ? null : convertMapToList(map);
-			rs.close();
-		} catch (SQLException e) {
-			LOG.error(e.getMessage(), e);
-		}
-		return items;
+		String query = ""; //for this query we don't need to have filter
+		return getSetResult(query);
 	}
 
 	@Override
 	public List<Item> findByName(String key) {
-		return null;
+		String query = String.format(" WHERE i.name_i = '%s'", key);
+		return getSetResult(query);
 	}
 
 	@Override
-	public Item findById(String id) {
-		return null;
+	public Item findById(int id) {
+		String query = String.format(" WHERE i.id_i = %s", id);
+		return getSetResult(query).get(0);
+	}
+
+	@Override
+	public void writeComment(int id, String comment) {
+		String query =
+				"INSERT INTO commentss (comment_c, id_i) "
+						+ "VALUES (?, ?);";
+		try (Connection conn = typeConn.connect();
+			 PreparedStatement st = conn.prepareStatement(query)) {
+			st.setString(1, comment);
+			st.setInt(2, id);
+			st.executeUpdate();
+		} catch (SQLException e) {
+			LOG.error(e.getMessage(), e);
+		}
 	}
 
 	private List<Item> convertMapToList(Map<Integer, Item> map) {
@@ -110,5 +115,43 @@ public class ItemDao implements IItemDao {
 			list.add(item.getValue());
 		}
 		return list;
+	}
+
+	private List<Item> getSetResult(String cond) {
+		String query = String.format(
+				"SELECT i.id_i, i.name_i, i.description_i, i.create_i, co.id_c, co.comment_c "
+						+ "FROM items i LEFT JOIN commentss co "
+						+ "ON i.id_i = co.id_i %s;", cond
+		);
+		List<Item> items = null;
+		try (Connection conn = typeConn.connect();
+			 PreparedStatement st = conn.prepareStatement(query);
+			 ResultSet rs = st.executeQuery()) {
+			Map<Integer, Item> map = new HashMap<>();
+			Item item;
+			while (rs.next()) {
+				int id = rs.getInt("id_i");
+				item = map.get(id);
+				if (item == null) {
+					item = new Item(
+							id, rs.getString("name_i"),
+							rs.getString("description_i"),
+							rs.getDate("create_i")
+					);
+					map.put(id, item);
+				}
+				String comment = rs.getString("comment_c");
+				if (comment != null) {
+					if (item.getComments() == null) {
+						item.setComments(new ArrayList<>());
+					}
+					item.getComments().add(new Comment(rs.getInt("id_c"), comment));
+				}
+			}
+			items = map.isEmpty() ? null : convertMapToList(map);
+		} catch (SQLException e) {
+			LOG.error(e.getMessage(), e);
+		}
+		return items;
 	}
 }
