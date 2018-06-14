@@ -1,31 +1,28 @@
-package ru.job4j.tracker;
+package ru.job4j.tracker.dao;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author Yury Matskevich
  * @since 0.1
  */
-public class Tracker {
+public class TrackerList implements ITracker {
     /**
      * Массив для хранение заявок.
      */
     private List<Item> items = new ArrayList<>();
 
-    public String indexOf(Item item) {
-        return item.getId();
-    }
-
+    @Override
     public Item add(Item item) {
         this.items.add(item);
         return item;
     }
 
-    public void replace(String id, Item item) {
+	@Override
+    public void update(String id, Item item) {
         for (Item elem : this.items) {
-            if (id.equals(indexOf(elem))) {
+            if (id.equals(elem.getId())) {
                 elem.setName(item.getName());
                 elem.setDescription(item.getDescription());
                 elem.setCreate(item.getCreate());
@@ -34,6 +31,7 @@ public class Tracker {
         }
     }
 
+	@Override
     public void delete(String id) {
         int i = 0;
         for (Item elem : items) {
@@ -45,26 +43,23 @@ public class Tracker {
         items.remove(i);
     }
 
-    public Item[] findAll() {
-        int i = 0;
-        Item[] cur = new Item[items.size()];
-        for (Item elem : items) {
-            cur[i++] = elem;
+	@Override
+    public List<Item> findAll() {
+        return items;
+    }
+
+	@Override
+    public List<Item> findByName(String key) {
+		List<Item> cur = new ArrayList<>();
+        for (Item elem : this.items) {
+            if (elem.getName().equals(key)) {
+                cur.add(elem);
+            }
         }
         return cur;
     }
 
-    public Item[] findByName(String key) {
-        Item[] cur = new Item[this.items.size()];
-        int i = 0;
-        for (Item elem : this.items) {
-            if (elem.getName().equals(key)) {
-                cur[i++] = elem;
-            }
-        }
-        return Arrays.copyOf(cur, i);
-    }
-
+	@Override
     public Item findById(String id) {
         Item cur = null;
         for (Item elem : this.items) {
@@ -74,4 +69,14 @@ public class Tracker {
         }
         return cur;
     }
+
+	@Override
+	public void writeComment(String id, String comment) {
+		Item cur = findById(id);
+		List<Comment> comments = cur.getComments();
+		if (comments == null) {
+			cur.setComments(new ArrayList<>());
+		}
+		cur.getComments().add(new Comment(comment));
+	}
 }

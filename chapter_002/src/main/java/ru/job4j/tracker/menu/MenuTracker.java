@@ -1,4 +1,8 @@
-package ru.job4j.tracker;
+package ru.job4j.tracker.menu;
+
+import ru.job4j.tracker.dao.ITracker;
+import ru.job4j.tracker.dao.Item;
+import ru.job4j.tracker.input.Input;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +14,10 @@ import java.util.List;
 public class MenuTracker {
     private int[] ranges = new int[] {0, 1, 2, 3, 4, 5, 6};
     private Input input;
-    private Tracker tracker;
+    private ITracker tracker;
     private List<UserAction> actions = new ArrayList<>();
 
-    public MenuTracker(Input input, Tracker tracker) {
+    public MenuTracker(Input input, ITracker tracker) {
         this.input = input;
         this.tracker = tracker;
     }
@@ -56,10 +60,10 @@ public class MenuTracker {
             return 0;
         }
 
-        public void execute(Input input, Tracker tracker) {
+        public void execute(Input input, ITracker trackerList) {
             String name = input.ask("Введите имя заявки: ");
             String desc = input.ask("Введите описание: ");
-            tracker.add(new Item(name, desc, System.currentTimeMillis()));
+            trackerList.add(new Item(name, desc, System.currentTimeMillis()));
         }
     }
 
@@ -72,8 +76,8 @@ public class MenuTracker {
             return 1;
         }
 
-        public void execute(Input input, Tracker tracker) {
-            for (Item item : tracker.findAll()) {
+        public void execute(Input input, ITracker trackerList) {
+            for (Item item : trackerList.findAll()) {
                 System.out.println(String.format("Id заявки: %s%nИмя заявки: %s%nОписание заявки: %s%nВремя создания заявки: %s%n",
                                                     item.getId(), item.getName(), item.getDescription(), item.getCreate()));
             }
@@ -89,12 +93,12 @@ public class MenuTracker {
             return 2;
         }
 
-        public void execute(Input input, Tracker tracker) {
+        public void execute(Input input, ITracker trackerList) {
             String id = input.ask("Введите id редактируемой заявки: ");
             String name = input.ask("Введите новое имя заявки: ");
             String desc = input.ask("Введите новое описание заявки: ");
             Item item = new Item(name, desc, System.currentTimeMillis());
-            tracker.replace(id, item);
+            trackerList.update(id, item);
         }
     }
 
@@ -107,9 +111,9 @@ public class MenuTracker {
             return 3;
         }
 
-        public void execute(Input input, Tracker tracker) {
+        public void execute(Input input, ITracker trackerList) {
             String id = input.ask("Введите id удаляемой заявки: ");
-            tracker.delete(id);
+            trackerList.delete(id);
         }
     }
 
@@ -122,9 +126,9 @@ public class MenuTracker {
             return 4;
         }
 
-        public void execute(Input input, Tracker tracker) {
+        public void execute(Input input, ITracker trackerList) {
             String id = input.ask("Введите id искомой заявки: ");
-            Item item = tracker.findById(id);
+            Item item = trackerList.findById(id);
             System.out.println(String.format("Id заявки: %s%nИмя заявки: %s%nОписание заявки: %s%nВремя создания заявки: %s%n",
                     item.getId(), item.getName(), item.getDescription(), item.getCreate()));
         }
@@ -139,9 +143,9 @@ public class MenuTracker {
             return 5;
         }
 
-        public void execute(Input input, Tracker tracker) {
+        public void execute(Input input, ITracker trackerList) {
             String name = input.ask("Введите имя искомой заявки: ");
-            for (Item item : tracker.findByName(name)) {
+            for (Item item : trackerList.findByName(name)) {
                 System.out.println(String.format("Id заявки: %s%nИмя заявки: %s%nОписание заявки: %s%nВремя создания заявки: %s%n",
                         item.getId(), item.getName(), item.getDescription(), item.getCreate()));
             }
@@ -158,7 +162,7 @@ class ExitProgram extends BaseAction {
         return 6;
     }
 
-    public void execute(Input input, Tracker tracker) {
+    public void execute(Input input, ITracker trackerList) {
 
     }
 }
