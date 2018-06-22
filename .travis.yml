@@ -16,6 +16,7 @@ notifications:
     on_success: never # default: change
     on_failure: always # default: always
 
-#start PostgreSQL
+#start some db
 services:
   - postgresql
+  - sqlite3
