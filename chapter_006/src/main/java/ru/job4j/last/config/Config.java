@@ -13,6 +13,12 @@ public class Config {
 	private static final Logger LOG = Logger.getLogger(Config.class);
 	private Properties prop;
 
+	/**
+	 * Creates object which contains settings for working a program
+	 * and allow to get them
+	 * @param name a name of file with settings for app.
+	 * It's located in a resource folder
+	 */
 	public Config(String name) {
 		loadParams(String.format("/%s", name));
 	}
@@ -27,7 +33,12 @@ public class Config {
 		return prop.getProperty(key);
 	}
 
-	//loads parameters from file to prop
+	/**
+	 * Loads parameters from file which is located in a resource
+	 * folder to object of {@link Properties}
+	 * @param name a name of .properties file which contains
+	 * some parameters for working of app
+	 */
 	private void loadParams(String name) {
 		prop = new Properties();
 		try (InputStream is = getClass()

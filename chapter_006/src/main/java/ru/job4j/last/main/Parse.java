@@ -28,6 +28,14 @@ public class Parse {
 	private OfferDao offerDao;
 	private IDateConverter dateConv = new DateConverter();
 
+	/**
+	 * Creates an object of {@link Parse} for parsing a section of
+	 * vacancy on the website called SQL.ru
+	 * @param config An object of {@link Config}  which contains
+	 * settings for the current program
+	 * @throws NoSuchDbException if there is no connection setting for
+	 * the current db in {@link StoreFactory}
+	 */
 	public Parse(String config) throws NoSuchDbException {
 		Config conf = new Config(config);
 		pagePath = conf.getProperty("jdbc.url");
@@ -36,50 +44,98 @@ public class Parse {
 		offerDao = new OfferDao(new StoreFactory(config).createConnection(dbName));
 	}
 
-	/*
-	Finds the all offers if it's a first launch or finds new offers
-	if it's not a first launch
+	/**
+	 * Adds all the suitable offers from a vacancy section of
+	 * SQL.ru
 	 */
-	public void findOffers() {
+	public void addFoundOffersToStore() {
 		LOG.info("Start finding new offers");
-		List<Offer> offers = new ArrayList<>();
-		int maxPage = getNumberOfMaxPage();
-		long lastDate = offerDao.getTheNewestDate();
-		long dateStartYear = dateConv.getLongOfStartOfCurrentYear();
-		f:
-		for (int page = 1; page <= maxPage; page++) {
-			Document doc = getDocumentOfCurrentPage(page);
-			Elements elems = doc.select("table.forumTable tbody tr");
-			for (int i = 4; i < elems.size(); i++) {
-				if (stopSearching(lastDate, dateStartYear, elems, i)) {
-					break f; //returns from inner loop to mark of f
-				}
-				Elements subElems = elems.get(i).select("td.postslisttopic a");
-				String head = subElems.text();
-				if (checkKeyWord(head)) {
-					String id = subElems.attr("href");
-					try {
-						String description = Jsoup
-								.connect(id)
-								.get()
-								.select("td.msgBody")
-								.get(1)
-								.text();
-						long create = dateConv.convertInLong(
-								elems.get(i).select("td.altCol").get(1).text()
-						);
-						offers.add(new Offer(id, head, description, create));
-					} catch (IOException e) {
-						LOG.error(e.getMessage(), e);
-						break f;
-					}
-				}
-			}
-		}
-		addToDb(offers);
+		addToDb(
+				searchOnAllPages(
+						getNumberOfMaxPage(),
+						offerDao.getTheNewestDate(),
+						dateConv.getLongOfStartOfCurrentYear()
+				)
+		);
 	}
 
-	//adds to the db list of offers
+	/**
+	 * Searches suitable offers on all pages of section
+	 * @param maxPage a max page in section
+	 * @param lastDate a date the offer which was last added to
+	 * the db
+	 * @param dateStartYear the value of the current year
+	 * @return {@link List} of suitable offers from vacancy section
+	 */
+	private List<Offer> searchOnAllPages(int maxPage, long lastDate, long dateStartYear) {
+		List<Offer> offers = new ArrayList<>();
+		for (int page = 1; page <= maxPage; page++) {
+			Elements elems = getDocumentOfCurrentPage(page)
+					.select("table.forumTable tbody tr");
+			if (!searchOnCurrentPage(lastDate, dateStartYear, elems, offers)) {
+				break;
+			}
+		}
+		return offers;
+	}
+
+	/**
+	 * Searches suitable offers on the current page of section
+	 * @param lastDate a date the offer which was last added to
+	 * the db
+	 * @param dateStartYear the value of the current year
+	 * @param elems set of information about offers in form of {@link Elements}
+	 * @param offers a reference to the {@link List} where offers store
+	 * @return true if it's necessary search for any offers on next page,
+	 * otherwise - false
+	 */
+	private boolean searchOnCurrentPage(long lastDate, long dateStartYear, Elements elems, List<Offer> offers) {
+		boolean result = true;
+		int amountElems = elems.size();
+		for (int i = 4; i < amountElems; i++) {
+			if (stopSearching(lastDate, dateStartYear, elems, i)) {
+				result = false;
+				break;
+			}
+			Elements subElems = elems.get(i).select("td.postslisttopic a");
+			String head = subElems.text();
+			if (checkKeyWord(head)) {
+				String id = subElems.attr("href");
+				addToList(id, elems, i, head, offers);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Adds an offer to the {@link List} called offer
+	 * @param id an id of the current offer
+	 * @param elems set of information about offers in form of {@link Elements}
+	 * @param numberOffer - a number of current offer in set of elems
+	 * @param head - a title of offer
+	 * @param offers a reference to the {@link List} where offers store
+	 */
+	private void addToList(String id, Elements elems, int numberOffer, String head, List<Offer> offers) {
+		try {
+			String description = Jsoup
+					.connect(id)
+					.get()
+					.select("td.msgBody")
+					.get(1)
+					.text();
+			long create = dateConv.convertInLong(
+					elems.get(numberOffer).select("td.altCol").get(1).text()
+			);
+			offers.add(new Offer(id, head, description, create));
+		} catch (IOException e) {
+			LOG.error(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Adds offers to the db
+	 * @param offers {@link List} of offer to the db
+	 */
 	private void addToDb(List<Offer> offers) {
 		if (offers.isEmpty()) {
 			LOG.info("There is no new offers for adding");
@@ -88,16 +144,27 @@ public class Parse {
 		offerDao.add(offers);
 	}
 
-	//a condition for stopping of searching
+	/**
+	 * A condition for stopping of searching
+	 * @param lastDate a date the offer which was last added to
+	 * the db
+	 * @param dateStartYear the value of the current year
+	 * @param elems set of information about offers in form of {@link Elements}
+	 * @param numberOffer a number of current offer in set of elems
+	 * @return true if it's necessary to stop searching, otherwise - false
+	 */
 	private boolean stopSearching(
-			long lastDate, long dateStartYear, Elements elems, int i) {
+			long lastDate, long dateStartYear, Elements elems, int numberOffer) {
 		long dateCurrOffer = dateConv.convertInLong(
-				elems.get(i).select("td.altCol").get(1).text()
+				elems.get(numberOffer).select("td.altCol").get(1).text()
 		);
 		return dateCurrOffer < dateStartYear | dateCurrOffer <= lastDate;
 	}
 
-	//gets numbers of a last page in the section
+	/**
+	 * Gets numbers of a last page in the section
+	 * @return a numbers of a last page
+	 */
 	private int getNumberOfMaxPage() {
 		Document doc = null;
 		int result = 1;
@@ -116,7 +183,12 @@ public class Parse {
 		return result;
 	}
 
-	//gets content of a current page
+	/**
+	 * Gets a content of the current page like an object of
+	 * {@link Document}
+	 * @param page a number of page
+	 * @return {@link Document} of a current page
+	 */
 	private Document getDocumentOfCurrentPage(int page) {
 		Document doc = null;
 		try {

@@ -19,13 +19,22 @@ public class ConnectionSqlite implements IConnection, AutoCloseable {
 	private String path;
 	private String scriptTable;
 
+	/**
+	 * Creates object of connection to the SQLite db.
+	 * @param conf an object of {@link Config} where it is
+	 * all the settings to the db
+	 */
 	public ConnectionSqlite(Config conf) {
 		path = conf.getProperty("jdbc.path");
 		scriptTable = conf.getProperty("jdbc.createTable");
 		createTable(connect());
 	}
 
-	//Changes a delemiter in a path from '\' to '/' if it is necessary
+	/**
+	 * Converts delemiters of resource's path from '\' to '/'
+	 * if it is necessary
+	 * @return a string of resourc where a delimiter is '/'
+	 */
 	private String convertPathIfNecessary() {
 		String path = res;
 		if (path.contains("\\")) {
@@ -34,7 +43,10 @@ public class ConnectionSqlite implements IConnection, AutoCloseable {
 		return path;
 	}
 
-	//create table
+	/**
+	 * Launche script for creating a table in a db
+	 * @param conn a connection to the db
+	 */
 	private void createTable(Connection conn) {
 		try (Statement st = conn.createStatement()) {
 			st.execute(scriptTable);

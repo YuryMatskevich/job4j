@@ -22,15 +22,20 @@ public class OfferDao implements IOfferDao {
 	public void add(List<Offer> offers) {
 		String query = "INSERT INTO offers (id, head, description, create_offer) "
 				+ "VALUES (?, ?, ?, ?);";
-		try (Connection conn = typeConn.connect();
-			 PreparedStatement st = conn.prepareStatement(query)) {
+		try (Connection conn = typeConn.connect()) {
 			for (Offer offer : offers) {
-				st.setString(1, offer.getId());
-				st.setString(2, offer.getHead());
-				st.setString(3, offer.getDescrition());
-				st.setLong(4, offer.getCreate());
-				st.executeUpdate();
-				LOG.info("A new offer has been added");
+				try (PreparedStatement st = conn.prepareStatement(query)) {
+					String id = offer.getId();
+					st.setString(1, id);
+					st.setString(2, offer.getHead());
+					st.setString(3, offer.getDescrition());
+					st.setLong(4, offer.getCreate());
+					st.executeUpdate();
+					LOG.info(String.format("A new offer has been added: %s", id));
+				} catch (SQLException e) {
+					updateDate(offer);
+					LOG.info("A date has chanched in an existing offer");
+				}
 			}
 		} catch (SQLException e) {
 			LOG.error(e.getMessage(), e);
@@ -83,5 +88,17 @@ public class OfferDao implements IOfferDao {
 			LOG.error(e.getMessage(), e);
 		}
 		return oldest;
+	}
+
+	private void updateDate(Offer offer) {
+		String query = "UPDATE offers SET create_offer = ? WHERE id = ?;";
+		try (Connection conn = typeConn.connect();
+			 PreparedStatement st = conn.prepareStatement(query)) {
+			st.setLong(1, offer.getCreate());
+			st.setString(2, offer.getId());
+			st.executeUpdate();
+		} catch (SQLException e) {
+			LOG.error(e.getMessage(), e);
+		}
 	}
 }

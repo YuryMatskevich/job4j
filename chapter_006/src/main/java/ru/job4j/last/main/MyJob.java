@@ -16,7 +16,7 @@ public class MyJob implements Job {
 					.getScheduler()
 					.getContext();
 			String conf = (String) schedulerContext.get("name");
-			new Parse(conf).findOffers();
+			new Parse(conf).addFoundOffersToStore();
 		} catch (SchedulerException | NoSuchDbException e) {
 			LOG.error(e.getMessage(), e);
 		}
