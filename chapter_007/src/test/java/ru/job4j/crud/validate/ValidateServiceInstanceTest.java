@@ -6,7 +6,7 @@ import ru.job4j.crud.store.Store;
 /**
  * @author Yury Matskevich
  */
-public class ValidateServiceInstance extends ValidateServiceTest {
+public class ValidateServiceInstanceTest extends ValidateServiceTest {
 	@Override
 	protected Validate getValidate() {
 		return ValidateService.getInstance();

@@ -38,8 +38,10 @@ public class ValidateService implements Validate {
 	@Override
 	public boolean update(User user) {
 		boolean result = false;
-		if (findById(user.getId()) != null
-				&& !existLoginOrEmail(user.getLogin(), user.getEmail())) {
+		User updateUser = findById(user.getId());
+		if (updateUser != null
+				&& (usersWithSameLoginAndOrName(updateUser, user)
+				| !existLoginOrEmail(user.getLogin(), user.getEmail()))) {
 			result = store.update(user);
 		}
 		return result;
@@ -92,6 +94,19 @@ public class ValidateService implements Validate {
 			result = true;
 		}
 		return result;
+	}
+
+	/**
+	 * Compares the equality of the field(s) of a login and an email
+	 * for two users
+	 * @param user1 a first user for comparing
+	 * @param user2 a second user for comparing
+	 * @return true if a logins and(or) an emails of two users are
+	 * eguals, otherwise - false
+	 */
+	private boolean usersWithSameLoginAndOrName(User user1, User user2) {
+		return user1.getLogin().equalsIgnoreCase(user2.getLogin())
+				| user1.getEmail().equalsIgnoreCase(user2.getEmail());
 	}
 
 	/**
