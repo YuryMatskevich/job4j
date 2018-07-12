@@ -14,14 +14,14 @@ import java.util.*;
 public class MemoryStore implements Store {
 	private static MemoryStore uniqueInstance =
 			new MemoryStore();
-	@GuardedBy("this")
-	private final Map<Integer, User> store = new HashMap<>();
+	private final Map<Integer, User> store =
+			Collections.synchronizedMap(new HashMap<>());
 	//a list of logins in the store
-	@GuardedBy("this")
-	private List<String> logins = new ArrayList<>();
+	private List<String> logins =
+			Collections.synchronizedList(new ArrayList<>());
 	//a list of emails in the store
-	@GuardedBy("this")
-	private List<String> emails = new ArrayList<>();
+	private List<String> emails =
+			Collections.synchronizedList(new ArrayList<>());
 
 	private MemoryStore() {
 
@@ -36,14 +36,14 @@ public class MemoryStore implements Store {
 	}
 
 	@Override
-	public synchronized boolean add(User user) {
+	public boolean add(User user) {
 		addLoginAndEmailToList(user);
 		user.setId(getUniqueKey()); //put in a new unique id in user which it is being added
 		return store.put(user.getId(), user) == null;
 	}
 
 	@Override
-	public synchronized boolean update(User user) {
+	public boolean update(User user) {
 		int curId = user.getId();
 		User curUser = findById(curId);
 		setUpUserFields(
@@ -59,29 +59,29 @@ public class MemoryStore implements Store {
 	}
 
 	@Override
-	public synchronized boolean delete(int id) {
+	public boolean delete(int id) {
 		User curUser = findById(id);
 		deleteLoginAndEmailFromList(curUser);
 		return store.remove(id).equals(curUser);
 	}
 
 	@Override
-	public synchronized List<User> findAll() {
+	public List<User> findAll() {
 		return new ArrayList<>(store.values());
 	}
 
 	@Override
-	public synchronized User findById(int id) {
+	public User findById(int id) {
 		return store.get(id);
 	}
 
 	@Override
-	public synchronized List<String> getLogins() {
+	public List<String> getLogins() {
 		return new ArrayList<>(logins);
 	}
 
 	@Override
-	public synchronized List<String> getEmails() {
+	public List<String> getEmails() {
 		return new ArrayList<>(emails);
 	}
 
@@ -90,7 +90,7 @@ public class MemoryStore implements Store {
 	 * @return a value of the unigue id
 	 * for a user is being added to the store
 	 */
-	private synchronized int getUniqueKey() {
+	private int getUniqueKey() {
 		//returns a max key from store. If store is empty - 0
 		int key = store.isEmpty() ? 0 : Collections.max(
 				store.entrySet(), Map.Entry.comparingByKey()).getKey();
@@ -98,6 +98,14 @@ public class MemoryStore implements Store {
 		return key;
 	}
 
+	/**
+	 * Sets up all(or some) the field of a current user
+	 * @param user a current user
+	 * @param name a name to be set to a corresponding user's field
+	 * @param login a login to be set to a corresponding user's field
+	 * @param email an email to be set to a corresponding user's field
+	 * @param create a create date to be set to a corresponding user's field
+	 */
 	private void setUpUserFields(
 			User user, String name, String login, String email, long create) {
 		user.setName(user.getName() == null ? name : user.getName());
@@ -111,7 +119,7 @@ public class MemoryStore implements Store {
 	 * corresponding list if they are not there
 	 * @param user a user with current login and email
 	 */
-	private synchronized void addLoginAndEmailToList(User user) {
+	private void addLoginAndEmailToList(User user) {
 		String login = user.getLogin();
 		String email = user.getEmail();
 		if (!logins.contains(login)) {
@@ -128,7 +136,7 @@ public class MemoryStore implements Store {
 	 * @param user a user with current login and email which
 	 * are being deleted from the lists
 	 */
-	private synchronized void deleteLoginAndEmailFromList(User user) {
+	private void deleteLoginAndEmailFromList(User user) {
 		logins.remove(user.getLogin());
 		emails.remove(user.getEmail());
 	}
