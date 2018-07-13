@@ -1,5 +1,6 @@
 package ru.job4j.crud.validate;
 
+import org.apache.log4j.Logger;
 import ru.job4j.crud.User;
 import ru.job4j.crud.store.MemoryStore;
 import ru.job4j.crud.store.Store;
@@ -13,6 +14,7 @@ import java.util.Set;
  * @author Yury Matskevich
  */
 public class ValidateService implements Validate {
+	private static final Logger LOG = Logger.getLogger(ValidateService.class);
 	private final Store store = MemoryStore.getInstance();
 	private static ValidateService uniqueInstance =
 			new ValidateService();

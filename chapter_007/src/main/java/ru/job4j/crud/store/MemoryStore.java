@@ -1,7 +1,7 @@
 package ru.job4j.crud.store;
 
-import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
+import org.apache.log4j.Logger;
 import ru.job4j.crud.User;
 
 import java.util.*;
@@ -12,6 +12,7 @@ import java.util.*;
  */
 @ThreadSafe
 public class MemoryStore implements Store {
+	private static final Logger LOG = Logger.getLogger(MemoryStore.class);
 	private static MemoryStore uniqueInstance =
 			new MemoryStore();
 	private final Map<Integer, User> store =
