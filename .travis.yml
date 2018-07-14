@@ -20,3 +20,7 @@ notifications:
 services:
   - postgresql
   - sqlite3
+
+#create a db for web application from chapter_007
+before_script:
+  - psql -c 'create database users;' -U postgres

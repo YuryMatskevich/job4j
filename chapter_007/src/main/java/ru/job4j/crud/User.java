@@ -1,5 +1,7 @@
 package ru.job4j.crud;
 
+import java.util.Objects;
+
 /**
  * A pojo object which represents
  * a user with specified attributes
@@ -18,7 +20,7 @@ public class User {
 	 * @param name a user's name
 	 * @param login a user's login
 	 * @param email a user's email
-	 * @param createDate an date when user was created
+	 * @param createDate a date when user was created
 	 */
 	public User(String name, String login, String email, long createDate) {
 		this.name = name;
@@ -39,6 +41,22 @@ public class User {
 		this.name = name;
 		this.login = login;
 		this.email = email;
+	}
+
+	/**
+	 * Creates a new user with all the comleted fields
+	 * @param id a user's id
+	 * @param name a user's name
+	 * @param login a user's login
+	 * @param email a user's email
+	 * @param createDate a date when user was created
+	 */
+	public User(int id, String name, String login, String email, long createDate) {
+		this.id = id;
+		this.name = name;
+		this.login = login;
+		this.email = email;
+		this.createDate = createDate;
 	}
 
 	public int getId() {
@@ -90,5 +108,25 @@ public class User {
 				+ ", email='" + email + '\''
 				+ ", createDate=" + createDate
 				+ '}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		User user = (User) o;
+		return createDate == user.createDate
+				&& Objects.equals(name, user.name)
+				&& Objects.equals(login, user.login)
+				&& Objects.equals(email, user.email);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, login, email, createDate);
 	}
 }

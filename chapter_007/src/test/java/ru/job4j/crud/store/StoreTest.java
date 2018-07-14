@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 /**
  * @author Yury Matskevich
  */
-public abstract class MemoryStoreTest {
+public abstract class StoreTest {
 	private final Store store = getStore();
 	private User user;
 
@@ -80,7 +80,9 @@ public abstract class MemoryStoreTest {
 
 	@Test
 	public void findByIdTest() {
-		assertEquals(user, store.findById(1));
+		User curUser = store.findAll().get(0); //there is one user in the store
+		System.out.println(curUser.toString());
+		assertEquals(user, store.findById(curUser.getId()));
 	}
 
 	@Test

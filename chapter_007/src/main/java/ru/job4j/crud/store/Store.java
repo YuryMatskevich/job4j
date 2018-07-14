@@ -36,7 +36,8 @@ public interface Store {
 	/**
 	 * Gets all users who are in the store
 	 * @return {@link List} of useres if there
-	 * are users in the store, otherwise - null
+	 * are users in the store, otherwise it will be
+	 * an empty {@link List}
 	 */
 	List<User> findAll();
 

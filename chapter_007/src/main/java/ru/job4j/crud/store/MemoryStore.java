@@ -67,7 +67,7 @@ public class MemoryStore implements Store {
 	}
 
 	@Override
-	public List<User> findAll() {
+	public synchronized List<User> findAll() {
 		return new ArrayList<>(store.values());
 	}
 
