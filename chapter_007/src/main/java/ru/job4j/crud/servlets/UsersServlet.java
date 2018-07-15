@@ -22,7 +22,8 @@ public class UsersServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		req.setAttribute("users", valid.findAll());
-		RequestDispatcher view = req.getRequestDispatcher("index.jsp");
+		RequestDispatcher view = req
+				.getRequestDispatcher("/WEB-INF/view/users.jsp");
 		view.forward(req, resp);
 	}
 
@@ -31,6 +32,6 @@ public class UsersServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String id = req.getParameter("id");
 		valid.delete(Integer.parseInt(id));
-		resp.sendRedirect("/users");
+		resp.sendRedirect("/");
 	}
 }

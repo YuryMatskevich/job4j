@@ -23,7 +23,7 @@ public class UserCreateServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		RequestDispatcher view = req.getRequestDispatcher("view/create.jsp");
+		RequestDispatcher view = req.getRequestDispatcher("/WEB-INF/view/create.jsp");
 		view.forward(req, resp);
 	}
 
@@ -34,6 +34,6 @@ public class UserCreateServlet extends HttpServlet {
 		String login = req.getParameter("login");
 		String email = req.getParameter("email");
 		valid.add(new User(name, login, email, System.currentTimeMillis()));
-		resp.sendRedirect("/users");
+		resp.sendRedirect("/");
 	}
 }

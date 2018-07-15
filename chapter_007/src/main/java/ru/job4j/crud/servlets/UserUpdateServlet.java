@@ -25,7 +25,7 @@ public class UserUpdateServlet extends HttpServlet {
 		String id = req.getParameter("id");
 		User user = valid.findById(Integer.parseInt(id));
 		req.setAttribute("user", user);
-		RequestDispatcher view = req.getRequestDispatcher("view/update.jsp");
+		RequestDispatcher view = req.getRequestDispatcher("/WEB-INF/view/update.jsp");
 		view.forward(req, resp);
 	}
 
@@ -37,6 +37,6 @@ public class UserUpdateServlet extends HttpServlet {
 		String login = req.getParameter("login");
 		String email = req.getParameter("email");
 		valid.update(new User(Integer.parseInt(id), name, login, email));
-		resp.sendRedirect("/users");
+		resp.sendRedirect("/");
 	}
 }

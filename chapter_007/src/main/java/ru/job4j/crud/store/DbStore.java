@@ -22,7 +22,7 @@ public class DbStore implements Store {
 	private LoadResource res = new LoadResource("/db.properties");
 
 	private DbStore() {
-		System.out.println();
+		SOURCE.setDriverClassName("org.postgresql.Driver");
 		SOURCE.setUrl(res.getProperty("db.path"));
 		SOURCE.setUsername(res.getProperty("db.username"));
 		SOURCE.setPassword(res.getProperty("db.password"));
