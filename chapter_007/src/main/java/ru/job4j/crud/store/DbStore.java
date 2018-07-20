@@ -33,6 +33,7 @@ public class DbStore implements Store {
 		);
 		SOURCE.setValidationQuery(res.getProperty("db.validationQuery"));
 		createTable();
+		add(new User(0, "admin", "admin", "admin@gmail.com", 0, "admin", 1)); //add an admin
 	}
 
 	public static DbStore getInstance() {
@@ -43,14 +44,16 @@ public class DbStore implements Store {
 	public boolean add(User user) {
 		boolean result = false;
 		String query =
-				"INSERT INTO users (name_u, login_u, email_u, create_u) "
-			  + "VALUES (?, ?, ?, ?)";
+				"INSERT INTO users (name_u, login_u, email_u, create_u, password_u, role_u) "
+			  + "VALUES (?, ?, ?, ?, ?, ?)";
 		try (Connection connection = SOURCE.getConnection();
 			 PreparedStatement st = connection.prepareStatement(query)) {
 			st.setString(1, user.getName());
 			st.setString(2, user.getLogin());
 			st.setString(3, user.getEmail());
 			st.setLong(4, user.getCreateDate());
+			st.setString(5, user.getPassword());
+			st.setInt(6, user.getRole());
 			result = st.executeUpdate() == 1;
 		} catch (Exception e) {
 			LOG.error(e.getMessage(), e);
@@ -63,14 +66,16 @@ public class DbStore implements Store {
 		boolean result = false;
 		String query =
 				"UPDATE users "
-			  + "SET name_u = ?, login_u = ?, email_u = ? "
+			  + "SET name_u = ?, login_u = ?, email_u = ?, password_u = ?, role_u = ?"
 			  + "WHERE id_u = ?;";
 		try (Connection connection = SOURCE.getConnection();
 			 PreparedStatement st = connection.prepareStatement(query)) {
 			st.setString(1, user.getName());
 			st.setString(2, user.getLogin());
 			st.setString(3, user.getEmail());
-			st.setInt(4, user.getId());
+			st.setString(4, user.getPassword());
+			st.setInt(5, user.getRole());
+			st.setInt(6, user.getId());
 			result = st.executeUpdate() == 1;
 		} catch (Exception e) {
 			LOG.error(e.getMessage(), e);
@@ -107,7 +112,9 @@ public class DbStore implements Store {
 								rs.getString(2),
 								rs.getString(3),
 								rs.getString(4),
-								rs.getLong(5)
+								rs.getLong(5),
+								rs.getString(6),
+								rs.getInt(7)
 						)
 				);
 			}
@@ -131,7 +138,9 @@ public class DbStore implements Store {
 							rs.getString(2),
 							rs.getString(3),
 							rs.getString(4),
-							rs.getLong(5)
+							rs.getLong(5),
+							rs.getString(6),
+							rs.getInt(7)
 					);
 				}
 			}

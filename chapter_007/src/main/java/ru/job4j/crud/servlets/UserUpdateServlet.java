@@ -36,7 +36,23 @@ public class UserUpdateServlet extends HttpServlet {
 		String name = req.getParameter("name");
 		String login = req.getParameter("login");
 		String email = req.getParameter("email");
-		valid.update(new User(Integer.parseInt(id), name, login, email));
-		resp.sendRedirect("/");
+		String password = req.getParameter("password");
+		String role = req.getParameter("roles");
+		if (
+				valid.update(
+				new User(
+						Integer.parseInt(id),
+						name.equals("") ? null : name,
+						login.equals("") ? null : login,
+						email.equals("") ? null : email,
+						password.equals("") ? null : password,
+						role == null ? null : Integer.parseInt(role)
+				)
+		)) {
+			resp.sendRedirect("/users");
+		} else {
+			req.setAttribute("error", "Invalid dates");
+			doGet(req, resp);
+		}
 	}
 }

@@ -1,15 +1,16 @@
 package ru.job4j.crud.servlets;
 
 import org.apache.log4j.Logger;
+import ru.job4j.crud.User;
 import ru.job4j.crud.validate.Validate;
 import ru.job4j.crud.validate.ValidateService;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Yury Matskevich
@@ -21,10 +22,14 @@ public class UsersServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		req.setAttribute("users", valid.findAll());
-		RequestDispatcher view = req
-				.getRequestDispatcher("/WEB-INF/view/users.jsp");
-		view.forward(req, resp);
+		User user = (User) req.getSession().getAttribute("activeUser");
+		int role = user.getRole();
+		List<User> allUsers = valid.findAll();
+		if (role == 1) {
+			allUsers.remove(user); // deletes an admin from list
+			req.setAttribute("users", allUsers);
+		}
+		req.getRequestDispatcher("/WEB-INF/view/users.jsp").forward(req, resp);
 	}
 
 	@Override
@@ -32,6 +37,6 @@ public class UsersServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String id = req.getParameter("id");
 		valid.delete(Integer.parseInt(id));
-		resp.sendRedirect("/");
+		resp.sendRedirect("/users");
 	}
 }

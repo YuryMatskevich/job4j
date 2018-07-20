@@ -3,7 +3,6 @@ package ru.job4j.crud.store;
 import ru.job4j.crud.User;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * This interface allow some method for working
@@ -62,4 +61,25 @@ public interface Store {
 	 * @return {@link List} of user's emails
 	 */
 	List<String> getEmails();
+
+	/**
+	 * Checks existince of a user with current login and password
+	 * in the store
+	 * @param login a current login
+	 * @param password a curent password
+	 * @return true if a user with current login and password
+	 * is existed, otherwise - false
+	 */
+	default Integer isCredential(String login, String password) {
+		List<User> users = findAll();
+		Integer result = null;
+		for (User user : users) {
+			if (user.getLogin().equals(login)
+					&& user.getPassword().equals(password)) {
+				result = user.getId();
+				break;
+			}
+		}
+		return result;
+	}
 }

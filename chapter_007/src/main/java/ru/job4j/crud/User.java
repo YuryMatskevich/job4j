@@ -13,6 +13,8 @@ public class User {
 	private String login;
 	private String email;
 	private long createDate;
+	private String password;
+	private Integer role;
 
 	/**
 	 * Creates a new user without an id.
@@ -22,11 +24,13 @@ public class User {
 	 * @param email a user's email
 	 * @param createDate a date when user was created
 	 */
-	public User(String name, String login, String email, long createDate) {
+	public User(String name, String login, String email, long createDate, String password, Integer role) {
 		this.name = name;
 		this.login = login;
 		this.email = email;
 		this.createDate = createDate;
+		this.password = password;
+		this.role = role;
 	}
 
 	/**
@@ -36,11 +40,13 @@ public class User {
 	 * @param login a user's login
 	 * @param email a user's email
 	 */
-	public User(int id, String name, String login, String email) {
+	public User(int id, String name, String login, String email, String password, Integer role) {
 		this.id = id;
 		this.name = name;
 		this.login = login;
 		this.email = email;
+		this.password = password;
+		this.role = role;
 	}
 
 	/**
@@ -51,12 +57,14 @@ public class User {
 	 * @param email a user's email
 	 * @param createDate a date when user was created
 	 */
-	public User(int id, String name, String login, String email, long createDate) {
+	public User(int id, String name, String login, String email, long createDate, String password, Integer role) {
 		this.id = id;
 		this.name = name;
 		this.login = login;
 		this.email = email;
 		this.createDate = createDate;
+		this.password = password;
+		this.role = role;
 	}
 
 	public int getId() {
@@ -97,6 +105,22 @@ public class User {
 
 	public void setCreateDate(long createDate) {
 		this.createDate = createDate;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Integer getRole() {
+		return role;
+	}
+
+	public void setRole(Integer role) {
+		this.role = role;
 	}
 
 	@Override

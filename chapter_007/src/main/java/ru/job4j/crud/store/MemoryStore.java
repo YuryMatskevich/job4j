@@ -25,7 +25,7 @@ public class MemoryStore implements Store {
 			Collections.synchronizedList(new ArrayList<>());
 
 	private MemoryStore() {
-
+		add(new User(0, "admin", "admin", "admin@gmail.com", 0, "admin", 1));
 	}
 
 	/**

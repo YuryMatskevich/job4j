@@ -1,57 +1,44 @@
 package ru.job4j.crud.servlets;
 
 import org.apache.log4j.Logger;
-import ru.job4j.crud.User;
 import ru.job4j.crud.validate.Validate;
 import ru.job4j.crud.validate.ValidateService;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
  * @author Yury Matskevich
  */
-public class UserCreateServlet extends HttpServlet {
-	private static final Logger LOG = Logger.getLogger(UserCreateServlet.class);
+public class SigninController extends HttpServlet {
+	private static final Logger LOG = Logger.getLogger(SigninController.class);
 	private final Validate valid = ValidateService.getInstance();
+
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		RequestDispatcher view = req.getRequestDispatcher("/WEB-INF/view/create.jsp");
-		view.forward(req, resp);
+		req.getRequestDispatcher("/WEB-INF/view/signin.jsp")
+				.forward(req, resp);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String name = req.getParameter("name");
 		String login = req.getParameter("login");
-		String email = req.getParameter("email");
 		String password = req.getParameter("password");
-		String role = req.getParameter("roles");
-		LOG.info(role);
-		if (valid.add(
-				new User(
-						name.equals("") ? null : name,
-						login.equals("") ? null : login,
-						email.equals("") ? null : email,
-						System.currentTimeMillis(),
-						password,
-						Integer.parseInt(
-								role == null
-										? req.getServletContext().getInitParameter("roleUser")
-										: role
-						)
-				)
-		)) {
+		Integer id = valid.isCredential(login, password);
+		if (id != null) {
+			HttpSession session = req.getSession();
+			session.setAttribute("activeUser", valid.findById(id));
+			LOG.info("User with " + valid.findById(id));
 			resp.sendRedirect("/users");
 		} else {
-			req.setAttribute("error", "Invalid dates");
+			req.setAttribute("error", "Credentional invalid");
 			doGet(req, resp);
 		}
 	}

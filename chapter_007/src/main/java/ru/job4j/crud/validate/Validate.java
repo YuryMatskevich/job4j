@@ -47,4 +47,14 @@ public interface Validate {
 	 * user with a current id, otherwise - null
 	 */
 	User findById(int id);
+
+	/**
+	 * Checks existince of a user with current login and password
+	 * in the store
+	 * @param login a current login
+	 * @param password a curent password
+	 * @return true if a user with current login and password
+	 * is existed, otherwise - false
+	 */
+	Integer isCredential(String login, String password);
 }

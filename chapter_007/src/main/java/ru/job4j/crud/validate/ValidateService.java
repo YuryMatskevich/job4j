@@ -3,7 +3,6 @@ package ru.job4j.crud.validate;
 import org.apache.log4j.Logger;
 import ru.job4j.crud.User;
 import ru.job4j.crud.store.DbStore;
-import ru.job4j.crud.store.MemoryStore;
 import ru.job4j.crud.store.Store;
 
 import java.util.Collection;
@@ -42,6 +41,9 @@ public class ValidateService implements Validate {
 	public boolean update(User user) {
 		boolean result = false;
 		User updateUser = findById(user.getId());
+		if (user.getRole() == null) {
+			user.setRole(updateUser.getRole());
+		}
 		if (updateUser != null
 				&& (usersWithSameLoginAndOrName(updateUser, user)
 				| !existLoginOrEmail(user.getLogin(), user.getEmail()))) {
@@ -67,6 +69,10 @@ public class ValidateService implements Validate {
 	@Override
 	public User findById(int id) {
 		return store.findById(id);
+	}
+
+	public Integer isCredential(String login, String password) {
+		return store.isCredential(login, password);
 	}
 
 	/**

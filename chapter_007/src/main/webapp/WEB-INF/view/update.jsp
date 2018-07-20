@@ -4,15 +4,36 @@
 <html>
 <head>
     <title>update</title>
+    <style> <%@include file="/css/first.css" %></style>
 </head>
 <body>
-    <h1>Updating user</h1>
-     <form action="${pageContext.servletContext.contextPath}/update" method="post">
-        <input type="hidden" name="id" value="<c:out value="${user.id}"/>">
-        Name: <input type="text" name="name" value="<c:out value="${user.name}"/>"><br><br>
-        Login: <input type="text" name="login" value="<c:out value="${user.login}"/>"><br><br>
-        Email: <input type="text" name="email" value="<c:out value="${user.email}"/>"><br><br>
-        <input type="submit" value="update">
-    </form>
+    <div class="content">
+        <h3>Updating user</h3>
+         <form action="${pageContext.servletContext.contextPath}/update" method="post">
+            <input type="hidden" name="id" value="<c:out value="${user.id}"/>">
+             <c:if test="${error != ''}">
+                 <div class="errorMessage">
+                     <c:out value="${error}"/>
+                 </div>
+             </c:if>
+             <ul style="list-style-type: none">
+                 <li><span>Name:</span><input type="text" name="name" value="<c:out value="${user.name}"/>"></li>
+                 <li><span>Login:</span><input type="text" name="login" value="<c:out value="${user.login}"/>"></li>
+                 <li><span>Email:</span><input type="text" name="email" value="<c:out value="${user.email}"/>"></li>
+                 <li><span>Password:</span><input type="text" name="password" value="<c:out value="${user.password}"/>"></li>
+                 <c:if test="${activeUser.role == initParam['roleAdmin'] and user.id != activeUser.id}">
+                     <li>
+                         <span>Role:</span>
+                         <select name="roles">
+                             <option value="${initParam['roleAdmin']}">Administrator</option>
+                             <option value="${initParam['roleUser']}">User</option>
+                         </select>
+                     </li>
+                 </c:if>
+             </ul>
+             <a href="/users">Go back</a>
+            <input class="button" type="submit" value="update">
+        </form>
+    </div>
 </body>
 </html>

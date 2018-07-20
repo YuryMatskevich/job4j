@@ -22,7 +22,7 @@ public abstract class StoreTest {
 	 */
 	@Before
 	public void setUp() {
-		user = new User("user", "login", "email", 1L);
+		user = new User("user", "login", "email", 1L, "pass", 2);
 		store.add(user);
 	}
 
@@ -60,8 +60,10 @@ public abstract class StoreTest {
 		String alterName = "alterUser";
 		String alterLogin = "alterLogin";
 		String alterEmil = "alterEmail";
+		String alterPass = "alterPass";
+		int alterRole = 2;
 		int id = getIdFirstUser();
-		User alterUser = new User(id, alterName, alterLogin, alterEmil);
+		User alterUser = new User(id, alterName, alterLogin, alterEmil, alterPass, alterRole);
 		assertTrue(store.update(alterUser));
 		User userFromStore = store.findById(id);
 		assertEquals(alterName, userFromStore.getName());
@@ -71,7 +73,7 @@ public abstract class StoreTest {
 
 	@Test
 	public void findAllTest() {
-		User user1 =  new User("user1", "login1", "email1", 2L);
+		User user1 =  new User("user1", "login1", "email1", 2L, "pass", 2);
 		store.add(user1);
 		Set<User> expectedUsers = new HashSet<>(Arrays.asList(user, user1));
 		Set<User> actualUsers = new HashSet<>(store.findAll());
@@ -81,21 +83,21 @@ public abstract class StoreTest {
 	@Test
 	public void findByIdTest() {
 		User curUser = store.findAll().get(0); //there is one user in the store
-		System.out.println(curUser.toString());
 		assertEquals(user, store.findById(curUser.getId()));
 	}
 
 	@Test
 	public void getLoginsTest() {
-		User user1 =  new User("user1", "login1", "email1", 2L);
+		User user1 =  new User("user1", "login1", "email1", 2L, "pass", 2);
 		store.add(user1);
 		Set<String> expectedLogins = new HashSet<>(
-				Arrays.asList(user.getLogin(), user1.getLogin())
+				Arrays.asList(user.getLogin(), user1.getLogin(), "admin")
 		);
 		Set<String> actualLogins = new HashSet<>(
 				Arrays.asList(
 						store.findAll().get(0).getLogin(),
-						store.findAll().get(1).getLogin()
+						store.findAll().get(1).getLogin(),
+						store.findAll().get(2).getLogin()
 				)
 		);
 		assertEquals(expectedLogins, actualLogins);
@@ -103,7 +105,7 @@ public abstract class StoreTest {
 
 	@Test
 	public void getEmailsTest() {
-		User user1 =  new User("user1", "login1", "email1", 2L);
+		User user1 =  new User("user1", "login1", "email1", 2L, "pass", 2);
 		store.add(user1);
 		Set<String> expectedLogins = new HashSet<>(
 				Arrays.asList(user.getEmail(), user1.getEmail())

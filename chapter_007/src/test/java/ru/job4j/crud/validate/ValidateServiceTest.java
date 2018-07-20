@@ -28,7 +28,7 @@ public abstract class ValidateServiceTest {
 	 */
 	@Before
 	public void setUp() {
-		user = new User("user", "login", "email", 1L);
+		user = new User("user", "login", "email", 1L, "pass", 2);
 		store.add(user);
 	}
 
@@ -47,51 +47,51 @@ public abstract class ValidateServiceTest {
 
 	@Test
 	public void whenUserDoesNotHaveNameThenItWillNotPassValidation() {
-		User user1 = new User(null, "login1", "email1", 1L);
+		User user1 = new User(null, "login1", "email1", 1L, "pass", 2);
 		assertFalse(validate.add(user1));
 	}
 
 	@Test
 	public void whenUserDoesNotHaveLoginThenItWillNotPassValidation() {
-		User user1 = new User("name1", null, "email1", 1L);
+		User user1 = new User("name1", null, "email1", 1L, "pass", 2);
 		assertFalse(validate.add(user1));
 	}
 
 	@Test
 	public void whenUserDoesNotHaveEmailThenItWillNotNotPassValidation() {
-		User user1 = new User("name1", "login1", null, 1L);
+		User user1 = new User("name1", "login1", null, 1L, "pass", 2);
 		assertFalse(validate.add(user1));
 	}
 
 	@Test
 	public void whenUserHasLoginWhichExistsAlreadyInStoreThenItWillNotPassValidation() {
-		User user1 = new User("name1", "login", "email1", 1L);
+		User user1 = new User("name1", "login", "email1", 1L, "pass", 2);
 		assertFalse(validate.add(user1));
 	}
 
 	@Test
 	public void whenUserHasEmailWhichExistsAlreadyInStoreThenItWillNotPassValidation() {
-		User user1 = new User("name1", "login1", "email", 1L);
+		User user1 = new User("name1", "login1", "email", 1L, "pass", 2);
 		assertFalse(validate.add(user1));
 	}
 
 	@Test
 	public void whenUserPassAllTheChecksOfAddedMethodThenItPassValidation() {
-		User user1 = new User("name1", "login1", "email1", 1L);
+		User user1 = new User("name1", "login1", "email1", 1L, "pass", 2);
 		assertTrue(validate.add(user1));
 	}
 
 	@Test
 	public void whenTryToUpdateUserWhichDoesNotExistInStoreThenFalse() {
 		int id = 2; //not existent id
-		User user1 = new User(id, "name1", "login1", "email1");
+		User user1 = new User(id, "name1", "login1", "email1", "pass", 2);
 		assertFalse(validate.update(user1));
 	}
 
 	@Test
 	public void whenUserPassAllTheChecksOfUpdateMethodThenItPassValidation() {
 		int id = store.findAll().get(0).getId(); //there is a user with a such id
-		User user1 = new User(id, "name1", "login1", "email1");
+		User user1 = new User(id, "name1", "login1", "email1", "pass", 2);
 		assertTrue(validate.update(user1));
 	}
 
