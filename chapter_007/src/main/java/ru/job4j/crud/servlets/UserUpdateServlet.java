@@ -38,8 +38,7 @@ public class UserUpdateServlet extends HttpServlet {
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");
 		String role = req.getParameter("roles");
-		if (
-				valid.update(
+		if (valid.update(
 				new User(
 						Integer.parseInt(id),
 						name.equals("") ? null : name,

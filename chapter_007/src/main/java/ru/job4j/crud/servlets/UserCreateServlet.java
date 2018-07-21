@@ -34,14 +34,13 @@ public class UserCreateServlet extends HttpServlet {
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");
 		String role = req.getParameter("roles");
-		LOG.info(role);
 		if (valid.add(
 				new User(
 						name.equals("") ? null : name,
 						login.equals("") ? null : login,
 						email.equals("") ? null : email,
 						System.currentTimeMillis(),
-						password,
+						password.equals("") ? null : password,
 						Integer.parseInt(
 								role == null
 										? req.getServletContext().getInitParameter("roleUser")

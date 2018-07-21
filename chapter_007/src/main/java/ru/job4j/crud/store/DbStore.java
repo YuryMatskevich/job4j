@@ -33,6 +33,7 @@ public class DbStore implements Store {
 		);
 		SOURCE.setValidationQuery(res.getProperty("db.validationQuery"));
 		createTable();
+		fillTableRole();
 		add(new User(0, "admin", "admin", "admin@gmail.com", 0, "admin", 1)); //add an admin
 	}
 
@@ -45,7 +46,7 @@ public class DbStore implements Store {
 		boolean result = false;
 		String query =
 				"INSERT INTO users (name_u, login_u, email_u, create_u, password_u, role_u) "
-			  + "VALUES (?, ?, ?, ?, ?, ?)";
+			  + "VALUES (?, ?, ?, ?, ?, ?);";
 		try (Connection connection = SOURCE.getConnection();
 			 PreparedStatement st = connection.prepareStatement(query)) {
 			st.setString(1, user.getName());
@@ -101,7 +102,6 @@ public class DbStore implements Store {
 	public List<User> findAll() {
 		List<User> users = new ArrayList<>();
 		String query = "SELECT * FROM users;";
-		User user;
 		try (Connection connection = SOURCE.getConnection();
 			 PreparedStatement st = connection.prepareStatement(query);
 			 ResultSet rs = st.executeQuery()) {
@@ -191,6 +191,19 @@ public class DbStore implements Store {
 		try (Connection connection = SOURCE.getConnection();
 			 Statement st = connection.createStatement()) {
 				st.execute(query);
+		} catch (Exception e) {
+			LOG.error(e.getMessage(), e);
+		}
+	}
+
+	/**
+     * fills tables of the db
+	 */
+	private void fillTableRole() {
+		String query = res.getProperty("db.fillRole");
+		try (Connection connection = SOURCE.getConnection();
+			 Statement st = connection.createStatement()) {
+			st.execute(query);
 		} catch (Exception e) {
 			LOG.error(e.getMessage(), e);
 		}
