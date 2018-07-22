@@ -24,6 +24,40 @@
             }
             return result;
         }
+
+        /**
+         * gets value of a radio button with attribute of name
+         * equals to gender which is checked
+         * @returns {*} a value of a curent radio button
+         */
+        function getCheckedElem() {
+            var radio = document.getElementsByName('gender');
+            var gender_value;
+            for(var i = 0; i < radio.length; i++){
+                if(radio[i].checked){
+                    gender_value = radio[i].value;
+                }
+            }
+            return gender_value;
+        }
+
+        /**
+         * adds a new row in the table with class equal to table
+         */
+        function addRow() {
+            var name = $('#name').val();
+            var surname = $('#surname').val();
+            var sex = getCheckedElem();
+            var description = $('#description').val();
+            $('table.table tr:last').after(
+                '<tr>' +
+                    '<td>' + name + '</td>' +
+                    '<td>' + surname + '</td>' +
+                    '<td>' + sex + '</td>' +
+                    '<td>' + description + '</td>' +
+                '</tr>'
+            );
+        }
     </script>
 </head>
 <body>
@@ -54,12 +88,13 @@
         </form>
     </div>
     <div class="container" style="margin-top: 20px">
+        <input type="button" class="btn btn-primary" onclick="addRow();" value="Add new row">
         <table class="table">
             <thead>
             <tr>
                 <th>Firstname</th>
                 <th>Lastname</th>
-                <th>Email</th>
+                <th>Sex</th>
                 <th>Description</th>
             </tr>
             </thead>
