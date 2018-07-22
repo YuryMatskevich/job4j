@@ -90,20 +90,20 @@ public abstract class ValidateServiceTest {
 
 	@Test
 	public void whenUserPassAllTheChecksOfUpdateMethodThenItPassValidation() {
-		int id = 1; //there is a user with a such id
+		int id = store.findAll().get(0).getId(); //there is a user with a such id
 		User user1 = new User(id, "name1", "login1", "email1");
 		assertTrue(validate.update(user1));
 	}
 
 	@Test
 	public void whenTryToDeleteUserByIdWhichDoesNotExistInStoreThenFalse() {
-		int id = 2; //not existent id
+		int id = store.findAll().get(0).getId() + 1; //not existent id
 		assertFalse(validate.delete(id));
 	}
 
 	@Test
 	public void whenUserPassAllTheChecksOfDeleteMethodThenItPassValidation() {
-		int id = 1; //there is a user with a such id
+		int id = store.findAll().get(0).getId(); //there is a user with a such id
 		assertTrue(validate.delete(id));
 	}
 
@@ -116,7 +116,8 @@ public abstract class ValidateServiceTest {
 
 	@Test
 	public void findByIdTest() {
-		assertEquals(user, validate.findById(1));
+		int id = store.findAll().get(0).getId();
+		assertEquals(user, store.findById(id));
 	}
 
 	protected abstract Validate getValidate();

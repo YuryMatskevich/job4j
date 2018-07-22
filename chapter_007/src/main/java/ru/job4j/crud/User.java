@@ -1,11 +1,14 @@
 package ru.job4j.crud;
 
+import java.util.Objects;
+
 /**
  * A pojo object which represents
  * a user with specified attributes
  * @author Yury Matskevich
  */
 public class User {
+	private static int count = 0; //an unique counter for users
 	private int id;
 	private String name;
 	private String login;
@@ -21,6 +24,7 @@ public class User {
 	 * @param createDate an date when user was created
 	 */
 	public User(String name, String login, String email, long createDate) {
+		this.id = ++count;
 		this.name = name;
 		this.login = login;
 		this.email = email;
@@ -90,5 +94,26 @@ public class User {
 				+ ", email='" + email + '\''
 				+ ", createDate=" + createDate
 				+ '}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		User user = (User) o;
+		return createDate == user.createDate
+				&& Objects.equals(name, user.name)
+				&& Objects.equals(login, user.login)
+				&& Objects.equals(email, user.email);
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(name, login, email, createDate);
 	}
 }
