@@ -8,6 +8,7 @@ import java.util.Objects;
  * @author Yury Matskevich
  */
 public class User {
+	private static int count = 0; //an unique counter for users
 	private int id;
 	private String name;
 	private String login;
@@ -25,6 +26,7 @@ public class User {
 	 * @param createDate a date when user was created
 	 */
 	public User(String name, String login, String email, long createDate, String password, Integer role) {
+		this.id = ++count;
 		this.name = name;
 		this.login = login;
 		this.email = email;

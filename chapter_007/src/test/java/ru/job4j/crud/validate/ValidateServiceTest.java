@@ -97,7 +97,7 @@ public abstract class ValidateServiceTest {
 
 	@Test
 	public void whenTryToDeleteUserByIdWhichDoesNotExistInStoreThenFalse() {
-		int id = 2; //not existent id
+		int id = store.findAll().get(0).getId() + 1; //not existent id
 		assertFalse(validate.delete(id));
 	}
 
@@ -116,8 +116,13 @@ public abstract class ValidateServiceTest {
 
 	@Test
 	public void findByIdTest() {
+//<<<<<<< HEAD
 		User curUser = store.findAll().get(0); //there is one user in the store
 		assertEquals(user, validate.findById(curUser.getId()));
+//=======
+//		int id = store.findAll().get(0).getId();
+//		assertEquals(user, store.findById(id));
+//>>>>>>> fix_Crude
 	}
 
 	protected abstract Validate getValidate();

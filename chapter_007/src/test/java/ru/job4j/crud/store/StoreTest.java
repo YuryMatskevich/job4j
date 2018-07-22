@@ -5,7 +5,10 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.job4j.crud.User;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -109,10 +112,11 @@ public abstract class StoreTest {
 		Set<String> expectedLogins = new HashSet<>(
 				Arrays.asList(user.getEmail(), user1.getEmail())
 		);
+		List<User> users = store.findAll();
 		Set<String> actualLogins = new HashSet<>(
 				Arrays.asList(
-						store.findAll().get(0).getEmail(),
-						store.findAll().get(1).getEmail()
+						users.get(0).getEmail(),
+						users.get(1).getEmail()
 				)
 		);
 		assertEquals(expectedLogins, actualLogins);
