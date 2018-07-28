@@ -1,7 +1,8 @@
 package ru.job4j.crud.servlets;
 
 import org.apache.log4j.Logger;
-import ru.job4j.crud.User;
+import ru.job4j.crud.pojo.State;
+import ru.job4j.crud.pojo.User;
 import ru.job4j.crud.validate.Validate;
 import ru.job4j.crud.validate.ValidateService;
 
@@ -11,6 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Yury Matskevich
@@ -22,6 +26,10 @@ public class UserCreateServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		@SuppressWarnings("unchecked")
+		Map<Integer, State> stateMap = (Map<Integer, State>) getServletContext().getAttribute("stateList");
+		List<State> stateList = new ArrayList<>(stateMap.values());
+		req.setAttribute("states", stateList);
 		RequestDispatcher view = req.getRequestDispatcher("/WEB-INF/view/create.jsp");
 		view.forward(req, resp);
 	}
@@ -34,6 +42,7 @@ public class UserCreateServlet extends HttpServlet {
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");
 		String role = req.getParameter("roles");
+		String city = req.getParameter("cities");
 		if (valid.add(
 				new User(
 						name.equals("") ? null : name,
@@ -45,12 +54,13 @@ public class UserCreateServlet extends HttpServlet {
 								role == null
 										? req.getServletContext().getInitParameter("roleUser")
 										: role
-						)
+						),
+						city.equals("") ? null : Integer.parseInt(city)
 				)
 		)) {
 			resp.sendRedirect("/users");
 		} else {
-			req.setAttribute("error", "Invalid dates");
+			req.setAttribute("error", "There is such a user with the same login or email");
 			doGet(req, resp);
 		}
 	}

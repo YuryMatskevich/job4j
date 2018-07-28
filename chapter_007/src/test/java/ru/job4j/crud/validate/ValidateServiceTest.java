@@ -3,17 +3,18 @@ package ru.job4j.crud.validate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import ru.job4j.crud.User;
-import ru.job4j.crud.store.MemoryStore;
+import ru.job4j.crud.listners.CreaterOfTable;
+import ru.job4j.crud.pojo.User;
 import ru.job4j.crud.store.Store;
 
+import javax.servlet.ServletContextEvent;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 /**
  * @author Yury Matskevich
@@ -23,12 +24,19 @@ public abstract class ValidateServiceTest {
 	private final Validate validate = getValidate();
 	private User user;
 
+	static {
+		new CreaterOfTable()
+				.contextInitialized(
+						mock(ServletContextEvent.class)
+				);
+	}
+
 	/**
 	 * Adds a new user
 	 */
 	@Before
 	public void setUp() {
-		user = new User("user", "login", "email", 1L, "pass", 2);
+		user = new User("user", "login", "email", 1L, "pass", 2, 1);
 		store.add(user);
 	}
 
@@ -47,51 +55,51 @@ public abstract class ValidateServiceTest {
 
 	@Test
 	public void whenUserDoesNotHaveNameThenItWillNotPassValidation() {
-		User user1 = new User(null, "login1", "email1", 1L, "pass", 2);
+		User user1 = new User(null, "login1", "email1", 1L, "pass", 2, 1);
 		assertFalse(validate.add(user1));
 	}
 
 	@Test
 	public void whenUserDoesNotHaveLoginThenItWillNotPassValidation() {
-		User user1 = new User("name1", null, "email1", 1L, "pass", 2);
+		User user1 = new User("name1", null, "email1", 1L, "pass", 2, 1);
 		assertFalse(validate.add(user1));
 	}
 
 	@Test
 	public void whenUserDoesNotHaveEmailThenItWillNotNotPassValidation() {
-		User user1 = new User("name1", "login1", null, 1L, "pass", 2);
+		User user1 = new User("name1", "login1", null, 1L, "pass", 2, 1);
 		assertFalse(validate.add(user1));
 	}
 
 	@Test
 	public void whenUserHasLoginWhichExistsAlreadyInStoreThenItWillNotPassValidation() {
-		User user1 = new User("name1", "login", "email1", 1L, "pass", 2);
+		User user1 = new User("name1", "login", "email1", 1L, "pass", 2, 1);
 		assertFalse(validate.add(user1));
 	}
 
 	@Test
 	public void whenUserHasEmailWhichExistsAlreadyInStoreThenItWillNotPassValidation() {
-		User user1 = new User("name1", "login1", "email", 1L, "pass", 2);
+		User user1 = new User("name1", "login1", "email", 1L, "pass", 2, 1);
 		assertFalse(validate.add(user1));
 	}
 
 	@Test
 	public void whenUserPassAllTheChecksOfAddedMethodThenItPassValidation() {
-		User user1 = new User("name1", "login1", "email1", 1L, "pass", 2);
+		User user1 = new User("name1", "login1", "email1", 1L, "pass", 2, 1);
 		assertTrue(validate.add(user1));
 	}
 
 	@Test
 	public void whenTryToUpdateUserWhichDoesNotExistInStoreThenFalse() {
 		int id = 2; //not existent id
-		User user1 = new User(id, "name1", "login1", "email1", "pass", 2);
+		User user1 = new User(id, "name1", "login1", "email1", "pass", 2, 1);
 		assertFalse(validate.update(user1));
 	}
 
 	@Test
 	public void whenUserPassAllTheChecksOfUpdateMethodThenItPassValidation() {
 		int id = store.findAll().get(0).getId(); //there is a user with a such id
-		User user1 = new User(id, "name1", "login1", "email1", "pass", 2);
+		User user1 = new User(id, "name1", "login1", "email1", "pass", 2, 1);
 		assertTrue(validate.update(user1));
 	}
 

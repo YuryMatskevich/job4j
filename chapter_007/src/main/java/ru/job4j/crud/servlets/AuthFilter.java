@@ -25,7 +25,9 @@ public class AuthFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp = (HttpServletResponse) response;
 		HttpSession session;
-		if (req.getRequestURI().contains("/signin") || req.getRequestURI().contains("/create")) {
+		if (req.getRequestURI().contains("/signin")
+				|| req.getRequestURI().contains("/create")
+				|| req.getRequestURI().contains("/jsonCity")) {
 			session = req.getSession(false);
 			if (session != null
 					&& session.getAttribute("activeUser") != null

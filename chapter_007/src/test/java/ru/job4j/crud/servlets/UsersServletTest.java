@@ -2,17 +2,17 @@ package ru.job4j.crud.servlets;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.job4j.crud.User;
+import ru.job4j.crud.listners.CreaterOfTable;
+import ru.job4j.crud.pojo.User;
 import ru.job4j.crud.store.DbStore;
 import ru.job4j.crud.store.Store;
-import ru.job4j.crud.validate.ValidateService;
 
+import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -23,13 +23,20 @@ import static org.mockito.Mockito.when;
 public class UsersServletTest {
 	private Store store = DbStore.getInstance();
 
+	static {
+		new CreaterOfTable()
+				.contextInitialized(
+						mock(ServletContextEvent.class)
+				);
+	}
+
 	@Before
 	//cleaning the store before testing
 	public void setUp() {
 		for (User user : store.findAll()) {
 			store.delete(user.getId());
 		}
-		User user = new User("name", "login", "email", 0, "pass", 2);
+		User user = new User("name", "login", "email", 0, "pass", 2, 1);
 		store.add(user);
 	}
 

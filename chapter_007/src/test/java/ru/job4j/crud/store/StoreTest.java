@@ -3,11 +3,14 @@ package ru.job4j.crud.store;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import ru.job4j.crud.User;
+import ru.job4j.crud.listners.CreaterOfTable;
+import ru.job4j.crud.pojo.User;
 
+import javax.servlet.ServletContextEvent;
 import java.util.*;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 /**
  * @author Yury Matskevich
@@ -16,12 +19,19 @@ public abstract class StoreTest {
 	private final Store store = getStore();
 	private User user;
 
+	static {
+		new CreaterOfTable()
+				.contextInitialized(
+						mock(ServletContextEvent.class)
+				);
+	}
+
 	/**
 	 * Adds a new user
 	 */
 	@Before
 	public void setUp() {
-		user = new User("user", "login", "email", 1L, "pass", 2);
+		user = new User("user", "login", "email", 1L, "pass", 2, 1);
 		store.add(user);
 	}
 
@@ -60,9 +70,10 @@ public abstract class StoreTest {
 		String alterLogin = "alterLogin";
 		String alterEmil = "alterEmail";
 		String alterPass = "alterPass";
+		int alterCity = 2;
 		int alterRole = 2;
 		int id = getIdFirstUser();
-		User alterUser = new User(id, alterName, alterLogin, alterEmil, alterPass, alterRole);
+		User alterUser = new User(id, alterName, alterLogin, alterEmil, alterPass, alterRole, alterCity);
 		assertTrue(store.update(alterUser));
 		User userFromStore = store.findById(id);
 		assertEquals(alterName, userFromStore.getName());
@@ -72,7 +83,7 @@ public abstract class StoreTest {
 
 	@Test
 	public void findAllTest() {
-		User user1 =  new User("user1", "login1", "email1", 2L, "pass", 2);
+		User user1 =  new User("user1", "login1", "email1", 2L, "pass", 2, 2);
 		store.add(user1);
 		Set<User> expectedUsers = new HashSet<>(Arrays.asList(user, user1));
 		Set<User> actualUsers = new HashSet<>(store.findAll());
@@ -104,7 +115,7 @@ public abstract class StoreTest {
 
 	@Test
 	public void getEmailsTest() {
-		User user1 =  new User("user1", "login1", "email1", 2L, "pass", 2);
+		User user1 =  new User("user1", "login1", "email1", 2L, "pass", 2, 1);
 		store.add(user1);
 		Set<String> expectedLogins = new HashSet<>(
 				Arrays.asList(user.getEmail(), user1.getEmail())

@@ -1,6 +1,6 @@
 package ru.job4j.crud.store;
 
-import ru.job4j.crud.User;
+import ru.job4j.crud.pojo.User;
 
 import java.util.List;
 
@@ -49,6 +49,14 @@ public interface Store {
 	User findById(int id);
 
 	/**
+	 * Gives a user with a current login
+	 * @param login a login of the search user
+	 * @return instance of {@link User} if there is
+	 * user with a current login, otherwise - null
+	 */
+	User findByLogin(String login);
+
+	/**
 	 * Gives all the logins which
 	 * is existed in the store
 	 * @return {@link List} of user's logins
@@ -67,8 +75,8 @@ public interface Store {
 	 * in the store
 	 * @param login a current login
 	 * @param password a curent password
-	 * @return true if a user with current login and password
-	 * is existed, otherwise - false
+	 * @return an id of current user if the user with current login and password
+	 * is existed, otherwise - null
 	 */
 	default Integer isCredential(String login, String password) {
 		List<User> users = findAll();

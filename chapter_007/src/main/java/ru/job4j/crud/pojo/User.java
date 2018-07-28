@@ -1,4 +1,4 @@
-package ru.job4j.crud;
+package ru.job4j.crud.pojo;
 
 import java.util.Objects;
 
@@ -15,6 +15,8 @@ public class User {
 	private long createDate;
 	private String password;
 	private Integer role;
+	private Integer cityId;
+	private Integer stateId;
 
 	/**
 	 * Creates a new user without an id.
@@ -24,13 +26,14 @@ public class User {
 	 * @param email a user's email
 	 * @param createDate a date when user was created
 	 */
-	public User(String name, String login, String email, long createDate, String password, Integer role) {
+	public User(String name, String login, String email, long createDate, String password, Integer role, int cityId) {
 		this.name = name;
 		this.login = login;
 		this.email = email;
 		this.createDate = createDate;
 		this.password = password;
 		this.role = role;
+		this.cityId = cityId;
 	}
 
 	/**
@@ -40,13 +43,14 @@ public class User {
 	 * @param login a user's login
 	 * @param email a user's email
 	 */
-	public User(int id, String name, String login, String email, String password, Integer role) {
+	public User(int id, String name, String login, String email, String password, Integer role, int cityId) {
 		this.id = id;
 		this.name = name;
 		this.login = login;
 		this.email = email;
 		this.password = password;
 		this.role = role;
+		this.cityId = cityId;
 	}
 
 	/**
@@ -57,7 +61,7 @@ public class User {
 	 * @param email a user's email
 	 * @param createDate a date when user was created
 	 */
-	public User(int id, String name, String login, String email, long createDate, String password, Integer role) {
+	public User(int id, String name, String login, String email, long createDate, String password, Integer role, int cityId) {
 		this.id = id;
 		this.name = name;
 		this.login = login;
@@ -65,6 +69,7 @@ public class User {
 		this.createDate = createDate;
 		this.password = password;
 		this.role = role;
+		this.cityId = cityId;
 	}
 
 	public int getId() {
@@ -123,15 +128,20 @@ public class User {
 		this.role = role;
 	}
 
-	@Override
-	public String toString() {
-		return "User{"
-				+ "id=" + id
-				+ ", name='" + name + '\''
-				+ ", login='" + login + '\''
-				+ ", email='" + email + '\''
-				+ ", createDate=" + createDate
-				+ '}';
+	public Integer getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(Integer cityId) {
+		this.cityId = cityId;
+	}
+
+	public Integer getStateId() {
+		return stateId;
+	}
+
+	public void setStateId(Integer stateId) {
+		this.stateId = stateId;
 	}
 
 	@Override

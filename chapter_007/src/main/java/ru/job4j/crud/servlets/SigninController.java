@@ -18,7 +18,6 @@ public class SigninController extends HttpServlet {
 	private static final Logger LOG = Logger.getLogger(SigninController.class);
 	private final Validate valid = ValidateService.getInstance();
 
-
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -35,10 +34,9 @@ public class SigninController extends HttpServlet {
 		if (id != null) {
 			HttpSession session = req.getSession();
 			session.setAttribute("activeUser", valid.findById(id));
-			LOG.info("User with " + valid.findById(id));
 			resp.sendRedirect("/users");
 		} else {
-			req.setAttribute("error", "Credentional invalid");
+			req.setAttribute("error", "A Login and/or a password is invalid");
 			doGet(req, resp);
 		}
 	}

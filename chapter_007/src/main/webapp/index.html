@@ -18,7 +18,7 @@
         function validate(id) {
             var value = $(id); //reference to the field with curent id
             var result = true;
-            if (value.val() === '') {
+            if (!value.val()) {
                 result = false;
                 alert(value.attr('name').concat(' is empty'));
             }
@@ -46,11 +46,12 @@
          * the MemoreStore
          */
         function fillTable() {
-            $.ajax('/json', {
-                method: 'get',
-                complete: function (data) {
+            $.ajax({
+                url: "/json",
+                method: "GET",
+                complete: function (response) {
                     var result = "";
-                    var users = JSON.parse(data.responseText);
+                    var users = JSON.parse(response.responseText);
                     for (var i = 0; i < users.length; i++) {
                         var user = users[i];
                         result +=

@@ -1,7 +1,7 @@
 package ru.job4j.crud.servlets;
 
 import org.apache.log4j.Logger;
-import ru.job4j.crud.User;
+import ru.job4j.crud.pojo.User;
 import ru.job4j.crud.validate.Validate;
 import ru.job4j.crud.validate.ValidateService;
 
@@ -25,8 +25,9 @@ public class UsersServlet extends HttpServlet {
 		User user = (User) req.getSession().getAttribute("activeUser");
 		int role = user.getRole();
 		List<User> allUsers = valid.findAll();
-		if (role == 1) {
-			allUsers.remove(user); // deletes an admin from list
+		String adminRole = getServletContext().getInitParameter("roleAdmin");
+		if (Integer.toString(role).equals(adminRole)) {
+			allUsers.remove(user);
 			req.setAttribute("users", allUsers);
 		}
 		req.getRequestDispatcher("/WEB-INF/view/users.jsp").forward(req, resp);

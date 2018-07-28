@@ -1,6 +1,6 @@
 package ru.job4j.crud.validate;
 
-import ru.job4j.crud.User;
+import ru.job4j.crud.pojo.User;
 
 import java.util.List;
 
@@ -47,6 +47,14 @@ public interface Validate {
 	 * user with a current id, otherwise - null
 	 */
 	User findById(int id);
+
+	/**
+	 * Gives a user with a current login
+	 * @param login a login of the search user
+	 * @return instance of {@link User} if there is
+	 * user with a current login, otherwise - null
+	 */
+	User findByLogin(String login);
 
 	/**
 	 * Checks existince of a user with current login and password

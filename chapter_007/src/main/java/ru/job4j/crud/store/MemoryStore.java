@@ -2,7 +2,7 @@ package ru.job4j.crud.store;
 
 import net.jcip.annotations.ThreadSafe;
 import org.apache.log4j.Logger;
-import ru.job4j.crud.User;
+import ru.job4j.crud.pojo.User;
 
 import java.util.*;
 
@@ -25,7 +25,7 @@ public class MemoryStore implements Store {
 			Collections.synchronizedList(new ArrayList<>());
 
 	private MemoryStore() {
-		add(new User(0, "admin", "admin", "admin@gmail.com", 0, "admin", 1));
+		add(new User(0, "admin", "admin", "admin@gmail.com", 0, "admin", 1, 1));
 	}
 
 	/**
@@ -74,6 +74,19 @@ public class MemoryStore implements Store {
 	@Override
 	public User findById(int id) {
 		return store.get(id);
+	}
+
+	@Override
+	public User findByLogin(String login) {
+		User user = null;
+		List<User> users = new ArrayList<>(store.values());
+		for (User item : users) {
+			if (item.getLogin().equalsIgnoreCase(login)) {
+				user = item;
+				break;
+			}
+		}
+		return user;
 	}
 
 	@Override
