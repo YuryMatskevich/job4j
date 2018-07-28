@@ -18,9 +18,22 @@
         function validate(id) {
             var value = $(id); //reference to the field with curent id
             var result = true;
-            if(value.val() == '') {
+            if (!value.val()) {
                 result = false;
                 alert(value.attr('name').concat(' is empty'));
+            }
+            return result;
+        }
+
+        /**
+         * checks whether the input fields are valid
+         * @returns {boolean} true if all the input fields aren't empty,
+         * otherwise - false
+         */
+        function checkFields() {
+            var result = false;
+            if (validate('#name') & validate('#surname') & validate('#description')) {
+                result = true;
             }
             return result;
         }
@@ -50,7 +63,7 @@
                 <label for="description">Description:</label><br>
                 <textarea id="description" name="description" cols="25"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary" onclick="return (validate('#name') & validate('#surname') & validate('#description'));">Submit</button>
+            <button type="submit" class="btn btn-primary" onclick="return checkFields();">Submit</button>
         </form>
     </div>
     <div class="container" style="margin-top: 20px">
