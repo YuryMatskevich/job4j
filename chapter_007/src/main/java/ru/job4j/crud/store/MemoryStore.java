@@ -77,6 +77,19 @@ public class MemoryStore implements Store {
 	}
 
 	@Override
+	public User findByLogin(String login) {
+		User user = null;
+		List<User> users = new ArrayList<>(store.values());
+		for (User item : users) {
+			if (item.getLogin().equalsIgnoreCase(login)) {
+				user = item;
+				break;
+			}
+		}
+		return user;
+	}
+
+	@Override
 	public List<String> getLogins() {
 		return new ArrayList<>(logins);
 	}

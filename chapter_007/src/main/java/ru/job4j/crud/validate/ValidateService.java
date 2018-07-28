@@ -5,10 +5,7 @@ import ru.job4j.crud.User;
 import ru.job4j.crud.store.DbStore;
 import ru.job4j.crud.store.Store;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Yury Matskevich
@@ -30,8 +27,8 @@ public class ValidateService implements Validate {
 	@Override
 	public boolean add(User user) {
 		boolean result = false;
-		if (!thereAreNotNorLorE(user)
-				&& !existLoginOrEmail(user.getLogin(), user.getEmail())) {
+		if (!thereAreFieldsWithNull(user)
+				&& (vacantEmail(user.getEmail()) & vacantLogin(user.getLogin()))) {
 			result = store.add(user);
 		}
 		return result;
@@ -41,12 +38,10 @@ public class ValidateService implements Validate {
 	public boolean update(User user) {
 		boolean result = false;
 		User updateUser = findById(user.getId());
-		if (user.getRole() == null) {
-			user.setRole(updateUser.getRole());
-		}
-		if (updateUser != null
-				&& (usersWithSameLoginAndOrName(updateUser, user)
-				| !existLoginOrEmail(user.getLogin(), user.getEmail()))) {
+		if (updateUser != null && checkForUpdate(user, updateUser)) {
+			if (user.getRole() == null) {
+				user.setRole(updateUser.getRole());
+			}
 			result = store.update(user);
 		}
 		return result;
@@ -71,65 +66,111 @@ public class ValidateService implements Validate {
 		return store.findById(id);
 	}
 
+	@Override
 	public Integer isCredential(String login, String password) {
-		return store.isCredential(login, password);
+		Integer result = null;
+		User user = findByLogin(login);
+		if (user != null) {
+			result = user.getPassword().equalsIgnoreCase(password)
+					? user.getId()
+					: null;
+		}
+		return result;
+	}
+
+	@Override
+	public User findByLogin(String login) {
+		return store.findByLogin(login);
 	}
 
 	/**
 	 * Checks if a current user doesn't have
-	 * a name or a login or a email
+	 * a name or a login or a email or a password or a role
+	 * or a city id
+	 *
 	 * @param user a current user
 	 * @return true if user
 	 */
-	private boolean thereAreNotNorLorE(User user) {
+	private boolean thereAreFieldsWithNull(User user) {
 		return user.getName() == null
 				|| user.getLogin() == null
-				|| user.getEmail() == null;
+				|| user.getEmail() == null
+				|| user.getPassword() == null
+				|| user.getRole() == null;
 	}
 
 	/**
-	 * Checks if a curent login and(or) an email exist(s) in
-	 * the store
+	 * Checks if a curent login there isn't in the store
+	 *
 	 * @param login a current login
-	 * @param email a current email
-	 * @return true if the login and(or) the email exist(s) in
+	 * @return true if the login doesn't exist in
 	 * the store, otherwise - false
 	 */
-	private boolean existLoginOrEmail(String login, String email) {
-		boolean result = false;
-		Set<String> logins = new HashSet<>(store.getLogins());
-		Set<String> emails = new HashSet<>(store.getEmails());
-		if (existElement(logins, login) || existElement(emails, email)) {
-			result = true;
+	private boolean vacantLogin(String login) {
+		boolean result = true;
+		for (String item : store.getLogins()) {
+			if (item.equalsIgnoreCase(login)) {
+				result = false;
+				break;
+			}
 		}
 		return result;
 	}
 
 	/**
-	 * Compares the equality of the field(s) of a login and an email
-	 * for two users
-	 * @param user1 a first user for comparing
-	 * @param user2 a second user for comparing
-	 * @return true if a logins and(or) an emails of two users are
-	 * eguals, otherwise - false
+	 * Checks if a curent email there isn't in the store
+	 *
+	 * @param email a current email
+	 * @return true if the email doesn't exist in
+	 * the store, otherwise - false
 	 */
-	private boolean usersWithSameLoginAndOrName(User user1, User user2) {
-		return user1.getLogin().equalsIgnoreCase(user2.getLogin())
-				| user1.getEmail().equalsIgnoreCase(user2.getEmail());
+	private boolean vacantEmail(String email) {
+		boolean result = true;
+		for (String item : store.getEmails()) {
+			if (item.equalsIgnoreCase(email)) {
+				result = false;
+				break;
+			}
+		}
+		return result;
 	}
 
 	/**
-	 * Checks is there a current element in a current collection
-	 * @param collection a current collection
-	 * @param elem a current element
-	 * @param <T> a generalized parameter
-	 * @return true if element is in the collection, otherwise - false
+	 * Compares the equality of the fields of a logins for two users
+	 *
+	 * @param user1 a first user for comparing
+	 * @param user2 a second user for comparing
+	 * @return true if logins of two users are
+	 * egual, otherwise - false
 	 */
-	/*
-	I've done this method because I think it may be useful in future
-	when I will have to know about existence any element in some collection
-	*/
-	private static <T> boolean existElement(Collection<T> collection, T elem) {
-		return collection.contains(elem);
+	private boolean areLoginsEqualed(User user1, User user2) {
+		String login1 = user1.getLogin();
+		String login2 = user2.getLogin();
+		return login1.equalsIgnoreCase(login2);
+	}
+
+	/**
+	 * Compares the equality of the fields of a emails for two users
+	 *
+	 * @param user1 a first user for comparing
+	 * @param user2 a second user for comparing
+	 * @return true if emails of two users are
+	 * egual, otherwise - false
+	 */
+	private boolean areEmailsEqualed(User user1, User user2) {
+		String email1 = user1.getEmail();
+		String email2 = user2.getEmail();
+		return email1.equalsIgnoreCase(email2);
+	}
+
+	private boolean checkForUpdate(User newUser, User oldUSer) {
+		boolean equalLogins = areLoginsEqualed(newUser, oldUSer);
+		boolean equalEmails = areEmailsEqualed(newUser, oldUSer);
+		boolean vacantLogin = vacantLogin(newUser.getLogin());
+		boolean vacantEmail = vacantEmail(newUser.getEmail());
+		return (equalLogins & equalEmails) //nothing has been chanched
+				|| (vacantLogin & equalEmails) //a login has chanched and an email is the same
+				|| (equalLogins & vacantEmail) //a login is the same an email has chanched
+				|| (vacantLogin & vacantEmail); //a login and an email have chanched
 	}
 }

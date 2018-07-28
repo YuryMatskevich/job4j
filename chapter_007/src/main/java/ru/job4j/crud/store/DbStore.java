@@ -2,8 +2,8 @@ package ru.job4j.crud.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.log4j.Logger;
-import ru.job4j.crud.User;
 import ru.job4j.crud.load.LoadResource;
+import ru.job4j.crud.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -131,6 +131,32 @@ public class DbStore implements Store {
 		try (Connection connection = SOURCE.getConnection();
 			 PreparedStatement st = connection.prepareStatement(query)) {
 			st.setInt(1, id);
+			try (ResultSet rs = st.executeQuery()) {
+				while (rs.next()) {
+					user = new User(
+							rs.getInt(1),
+							rs.getString(2),
+							rs.getString(3),
+							rs.getString(4),
+							rs.getLong(5),
+							rs.getString(6),
+							rs.getInt(7)
+					);
+				}
+			}
+		} catch (Exception e) {
+			LOG.error(e.getMessage(), e);
+		}
+		return user;
+	}
+
+	@Override
+	public User findByLogin(String login) {
+		String query = "SELECT * FROM users WHERE login_u = ?;";
+		User user = null;
+		try (Connection connection = SOURCE.getConnection();
+			 PreparedStatement st = connection.prepareStatement(query)) {
+			st.setString(1, login);
 			try (ResultSet rs = st.executeQuery()) {
 				while (rs.next()) {
 					user = new User(

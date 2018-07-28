@@ -49,6 +49,14 @@ public interface Validate {
 	User findById(int id);
 
 	/**
+	 * Gives a user with a current login
+	 * @param login a login of the search user
+	 * @return instance of {@link User} if there is
+	 * user with a current login, otherwise - null
+	 */
+	User findByLogin(String login);
+
+	/**
 	 * Checks existince of a user with current login and password
 	 * in the store
 	 * @param login a current login
