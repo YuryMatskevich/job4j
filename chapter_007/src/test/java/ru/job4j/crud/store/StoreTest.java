@@ -7,7 +7,10 @@ import ru.job4j.crud.listners.CreaterOfTable;
 import ru.job4j.crud.pojo.User;
 
 import javax.servlet.ServletContextEvent;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -120,10 +123,11 @@ public abstract class StoreTest {
 		Set<String> expectedLogins = new HashSet<>(
 				Arrays.asList(user.getEmail(), user1.getEmail())
 		);
+		List<User> users = store.findAll();
 		Set<String> actualLogins = new HashSet<>(
 				Arrays.asList(
-						store.findAll().get(0).getEmail(),
-						store.findAll().get(1).getEmail()
+						users.get(0).getEmail(),
+						users.get(1).getEmail()
 				)
 		);
 		assertEquals(expectedLogins, actualLogins);
