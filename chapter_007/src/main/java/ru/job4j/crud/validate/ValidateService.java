@@ -87,7 +87,6 @@ public class ValidateService implements Validate {
 	 * Checks if a current user doesn't have
 	 * a name or a login or a email or a password or a role
 	 * or a city id
-	 *
 	 * @param user a current user
 	 * @return true if user
 	 */
@@ -102,7 +101,6 @@ public class ValidateService implements Validate {
 
 	/**
 	 * Checks if a curent login there isn't in the store
-	 *
 	 * @param login a current login
 	 * @return true if the login doesn't exist in
 	 * the store, otherwise - false
@@ -120,7 +118,6 @@ public class ValidateService implements Validate {
 
 	/**
 	 * Checks if a curent email there isn't in the store
-	 *
 	 * @param email a current email
 	 * @return true if the email doesn't exist in
 	 * the store, otherwise - false
@@ -138,7 +135,6 @@ public class ValidateService implements Validate {
 
 	/**
 	 * Compares the equality of the fields of a logins for two users
-	 *
 	 * @param user1 a first user for comparing
 	 * @param user2 a second user for comparing
 	 * @return true if logins of two users are
@@ -152,7 +148,6 @@ public class ValidateService implements Validate {
 
 	/**
 	 * Compares the equality of the fields of a emails for two users
-	 *
 	 * @param user1 a first user for comparing
 	 * @param user2 a second user for comparing
 	 * @return true if emails of two users are

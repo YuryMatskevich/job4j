@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class stores user in the {@link Map}
- *
  * @author Yury Matskevich
  */
 @ThreadSafe
@@ -28,7 +27,6 @@ public class MemoryStore implements Store {
 
 	/**
 	 * Creates an unique instance of {@link MemoryStore}
-	 *
 	 * @return an instance of {@link MemoryStore}
 	 */
 	public static MemoryStore getInstance() {
@@ -103,7 +101,6 @@ public class MemoryStore implements Store {
 
 	/**
 	 * Sets up all(or some) the field of a current user
-	 *
 	 * @param user   a current user
 	 * @param name   a name to be set to a corresponding user's field
 	 * @param login  a login to be set to a corresponding user's field
