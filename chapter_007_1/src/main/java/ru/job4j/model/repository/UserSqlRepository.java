@@ -1,11 +1,10 @@
 package ru.job4j.model.repository;
 
 import org.apache.log4j.Logger;
+import ru.job4j.model.load.LoadResource;
 import ru.job4j.model.pojo.Address;
 import ru.job4j.model.pojo.MusicType;
-import ru.job4j.model.pojo.Roles;
 import ru.job4j.model.pojo.User;
-import ru.job4j.model.load.LoadResource;
 import ru.job4j.model.repository.queries.Specification;
 import ru.job4j.model.repository.queries.SqlSpecification;
 import ru.job4j.model.store.StoreDb;
@@ -15,7 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,6 +38,7 @@ public class UserSqlRepository implements Repository<User> {
 		boolean result = false;
 		String query1 = res.getProperty("db.queryAdd");
 		String query2 = res.getProperty("db.queryAddMusic");
+		Address address = user.getAddress();
 		try (Connection connection = store.getConnection()) {
 			try (PreparedStatement statement1 = connection.prepareStatement(query1)) {
 				connection.setAutoCommit(false);
@@ -47,19 +46,19 @@ public class UserSqlRepository implements Repository<User> {
 				statement1.setInt(2, user.getRole().getId());
 				statement1.setString(3, user.getLogin());
 				statement1.setString(4, user.getPassword());
-				Address address = user.getAddress();
 				statement1.setString(5, address.getCountry());
 				statement1.setString(6, address.getCity());
+				statement1.executeUpdate();
 				try (PreparedStatement statement2 = connection.prepareStatement(query2)) {
 					List<MusicType> music = user.getMusicsType();
 					for (MusicType item : music) {
 						statement2.setInt(1, item.getId());
 						statement2.addBatch();
 					}
-					result = statement1.executeUpdate() == 0
-							& statement2.executeBatch().length == music.size();
+					statement2.executeBatch();
 				}
 				connection.commit();
+				result = true;
 			} catch (SQLException e) {
 				LOG.error(e.getMessage(), e);
 				connection.rollback();
@@ -73,46 +72,45 @@ public class UserSqlRepository implements Repository<User> {
 	@Override
 	public boolean update(User user) {
 		boolean result = false;
-		String query1 = res.getProperty("db.queryUpdateUser");
-		String query2 = res.getProperty("db.queryUpdateCredential");
-		String query3 = res.getProperty("db.queryUpdateAddress");
-		String query4 = res.getProperty("db.queryDeleteMusic");
-		String query5 = res.getProperty("db.queryUpdateMusic");
+		String query1 = String.format(
+				"%s%s%s%s",
+				res.getProperty("db.queryUpdateUser"),
+				res.getProperty("db.queryUpdateCredential"),
+				res.getProperty("db.queryUpdateAddress"),
+				res.getProperty("db.queryDeleteMusic")
+		);
+		String query2 = res.getProperty("db.queryUpdateMusic");
 		int id = user.getId();
+		Address address = user.getAddress();
 		try (Connection connection = store.getConnection()) {
 			connection.setAutoCommit(false);
 			try (PreparedStatement statement1 = connection.prepareStatement(query1)) {
 				statement1.setString(1, user.getName());
 				statement1.setInt(2, user.getRole().getId());
 				statement1.setInt(3, id);
+				statement1.setString(4, user.getLogin());
+				statement1.setString(5, user.getPassword());
+				statement1.setInt(6, id);
+				statement1.setString(7, address.getCity());
+				statement1.setString(8, address.getCountry());
+				statement1.setInt(9, id);
+				statement1.setInt(10, id);
+				statement1.executeUpdate();
 				try (PreparedStatement statement2 = connection.prepareStatement(query2)) {
-					statement2.setString(1, user.getLogin());
-					statement2.setString(2, user.getPassword());
-					statement2.setInt(3, id);
-					try (PreparedStatement statement3 = connection.prepareStatement(query3)) {
-						Address address = user.getAddress();
-						statement3.setString(1, address.getCountry());
-						statement3.setString(2, address.getCity());
-						statement3.setInt(3, id);
-						try (PreparedStatement statement4 = connection.prepareStatement(query4)) {
-							statement4.setInt(1, id);
-							try (PreparedStatement statement5 = connection.prepareStatement(query5)) {
-								List<MusicType> music = user.getMusicsType();
-								for (MusicType item : music) {
-									statement5.setInt(1, id);
-									statement5.setInt(2, item.getId());
-									statement5.addBatch();
-								}
-								result = statement1.executeUpdate() == 1
-										& statement2.executeUpdate() == 1
-										& statement3.executeUpdate() == 1
-										& !statement4.execute()
-										& statement5.executeBatch().length == music.size();
-							}
-						}
+					List<MusicType> music = user.getMusicsType();
+					for (MusicType item : music) {
+						statement2.setInt(1, id);
+						statement2.setInt(2, item.getId());
+						statement2.addBatch();
 					}
+					statement2.executeBatch();
 				}
 				connection.commit();
+				/*
+				if there is not SQLExeption it means everything is ok => result = true,
+				otherwise result = false and rollback.
+				 */
+				result = true;
 			} catch (SQLException e) {
 				LOG.error(e.getMessage(), e);
 				connection.rollback();

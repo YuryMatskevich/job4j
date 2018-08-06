@@ -14,7 +14,7 @@ import javax.servlet.ServletContextListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author Yury Matskevich
@@ -65,7 +65,7 @@ public class PrepareListner implements ServletContextListener {
 						"ADMIN",
 						new Address("Belarus", "Brest"),
 						Roles.ADMIN,
-						new ArrayList<MusicType>()
+						Arrays.asList(MusicType.ROCK, MusicType.FOLK)
 				)
 		);
 	}
