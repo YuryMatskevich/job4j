@@ -71,7 +71,7 @@ public class BoardTest {
 	}
 
 
-
+	@Ignore
 	@Test
 	public void test() throws InterruptedException {
 		setUp();
