@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS item (
+  id_i serial PRIMARY KEY,
+  desc_i TEXT NOT NULL,
+  created_i TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
+  done_i BOOLEAN NOT NULL
+);

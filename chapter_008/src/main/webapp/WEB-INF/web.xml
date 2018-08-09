@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+         http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+         version="2.4">
+    <servlet>
+        <servlet-name>Item Servlet</servlet-name>
+        <servlet-class>ru.job4j.todo.servlets.ItemServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Item Servlet</servlet-name>
+        <url-pattern>/items</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Json Servlet</servlet-name>
+        <servlet-class>ru.job4j.todo.servlets.JsonServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Json Servlet</servlet-name>
+        <url-pattern>/json</url-pattern>
+    </servlet-mapping>
+    <listener>
+        <listener-class>ru.job4j.todo.servlets.CreateDbListner</listener-class>
+    </listener>
+</web-app>
