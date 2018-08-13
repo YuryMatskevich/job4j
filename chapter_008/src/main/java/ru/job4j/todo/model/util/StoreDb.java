@@ -6,6 +6,7 @@ import org.hibernate.query.Query;
 import ru.job4j.todo.model.entity.Item;
 
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * A class allows some method fore working with a db
@@ -23,16 +24,11 @@ public class StoreDb {
 		return uniqueInstance;
 	}
 
-	/**
-	 * Adds a new item to a db
-	 *
-	 * @param item an item for adding to a Db
-	 */
-	public void createItem(Item item) {
-		final Session session = ConnectionHb.getSession();
-		final Transaction transact = session.beginTransaction();
+	private <T> T tx(final Function<Session, T> command) {
+		Session session = ConnectionHb.getSession();
+		Transaction transact = session.beginTransaction();
 		try {
-			session.save(item);
+			return command.apply(session);
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 			throw e;
@@ -40,6 +36,15 @@ public class StoreDb {
 			transact.commit();
 			session.close();
 		}
+	}
+
+	/**
+	 * Adds a new item to a db
+	 *
+	 * @param item an item for adding to a Db
+	 */
+	public void createItem(Item item) {
+		tx(session -> session.save(item));
 	}
 
 	/**
@@ -50,17 +55,9 @@ public class StoreDb {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Item> listItem() {
-		final Session session = ConnectionHb.getSession();
-		final Transaction transact = session.beginTransaction();
-		try {
-			return (List<Item>) session.createQuery("from Item").getResultList();
-		} catch (Exception e) {
-			session.getTransaction().rollback();
-			throw e;
-		} finally {
-			transact.commit();
-			session.close();
-		}
+		return tx(
+				session -> (List<Item>) session.createQuery("from Item").getResultList()
+		);
 	}
 
 	/**
@@ -71,19 +68,15 @@ public class StoreDb {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Item> listNoteDoneItem() {
-		final Session session = ConnectionHb.getSession();
-		final Transaction transact = session.beginTransaction();
-		try {
-			Query query = session.createQuery("from Item where done =: paramDone");
-			query.setParameter("paramDone", false);
-			return query.list();
-		} catch (Exception e) {
-			session.getTransaction().rollback();
-			throw e;
-		} finally {
-			transact.commit();
-			session.close();
-		}
+		return tx(
+				session -> {
+					Query query = session.createQuery(
+							"from Item where done =: paramDone"
+					);
+					query.setParameter("paramDone", false);
+					return query.getResultList();
+				}
+		);
 	}
 
 	/**
@@ -93,19 +86,14 @@ public class StoreDb {
 	 * @param done a state of a item for updating
 	 */
 	public void updateDone(int id, boolean done) {
-		final Session session = ConnectionHb.getSession();
-		final Transaction transact = session.beginTransaction();
-		try {
-			Query query = session.createQuery("update Item set done =: paramDone where id =: paramId");
-			query.setParameter("paramDone", done);
-			query.setParameter("paramId", id);
-			query.executeUpdate();
-		} catch (Exception e) {
-			session.getTransaction().rollback();
-			throw e;
-		} finally {
-			transact.commit();
-			session.close();
-		}
+		tx(session -> {
+					Query query = session.createQuery(
+							"update Item set done =: paramDone where id =: paramId"
+					);
+					query.setParameter("paramDone", done);
+					query.setParameter("paramId", id);
+					return query.executeUpdate();
+				}
+		);
 	}
 }
