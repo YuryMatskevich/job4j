@@ -2,5 +2,5 @@
 [![codecov](https://codecov.io/gh/YuryMatskevich/ymatskevich/branch/master/graph/badge.svg)](https://codecov.io/gh/YuryMatskevich/ymatskevich)
 
 # ymatskevich
-Я прохожу обучение по курсу Job4j (http://job4j.ru/) Планирую его пройти в течении 2018.
-В этом репозитории находятся проекты, которые я реализовал во время обучения. 
+http://job4j.ru/
+This repository contains all my educationl projects
