@@ -11,7 +11,7 @@ import org.hibernate.cfg.Configuration;
  */
 class ConnectionHb {
 	//creates a single object of SessionFactory per an application
-	private static SessionFactory sessionFactory =
+	private static final SessionFactory FACTORY =
 			new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
 
 	/**
@@ -27,6 +27,6 @@ class ConnectionHb {
 	 * @return a new <code>Session</code>
 	 */
 	static Session getSession() {
-		return sessionFactory.openSession();
+		return FACTORY.openSession();
 	}
 }

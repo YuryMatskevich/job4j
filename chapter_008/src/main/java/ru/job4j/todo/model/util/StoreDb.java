@@ -24,34 +24,18 @@ public class StoreDb {
 		return uniqueInstance;
 	}
 
-	private <T> void txVoid(final Function<Session, T> command) {
-		Transaction transact = null;
-		try (Session session = ConnectionHb.getSession()) {
-			transact = session.beginTransaction();
-			command.apply(session);
-			transact.commit();
+	private <T> T tx(final Function<Session, T> command) {
+		Session session = ConnectionHb.getSession();
+		Transaction transact = session.beginTransaction();
+		try {
+			return command.apply(session);
 		} catch (Exception e) {
-			if (transact != null) {
-				transact.rollback();
-			}
+			session.getTransaction().rollback();
 			throw e;
-		}
-	}
-
-	private <T> T txT(final Function<Session, T> command) {
-		Transaction transact = null;
-		T items;
-		try (Session session = ConnectionHb.getSession()) {
-			transact = session.beginTransaction();
-			items = command.apply(session);
+		} finally {
 			transact.commit();
-		} catch (Exception e) {
-			if (transact != null) {
-				transact.rollback();
-			}
-			throw e;
+			session.close();
 		}
-		return items;
 	}
 
 	/**
@@ -60,7 +44,7 @@ public class StoreDb {
 	 * @param item an item for adding to a Db
 	 */
 	public void createItem(Item item) {
-		txVoid(session -> session.save(item));
+		tx(session -> session.save(item));
 	}
 
 	/**
@@ -71,8 +55,8 @@ public class StoreDb {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Item> listItem() {
-		return txT(
-				session -> (List<Item>) session.createQuery("from Item").list()
+		return tx(
+				session -> (List<Item>) session.createQuery("from Item").getResultList()
 		);
 	}
 
@@ -84,12 +68,13 @@ public class StoreDb {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Item> listNoteDoneItem() {
-		return txT(
+		return tx(
 				session -> {
 					Query query = session.createQuery(
-							"from Item where done =: paramDone");
+							"from Item where done =: paramDone"
+					);
 					query.setParameter("paramDone", false);
-					return query.list();
+					return query.getResultList();
 				}
 		);
 	}
@@ -101,9 +86,10 @@ public class StoreDb {
 	 * @param done a state of a item for updating
 	 */
 	public void updateDone(int id, boolean done) {
-		txVoid(session -> {
+		tx(session -> {
 					Query query = session.createQuery(
-							"update Item set done =: paramDone where id =: paramId");
+							"update Item set done =: paramDone where id =: paramId"
+					);
 					query.setParameter("paramDone", done);
 					query.setParameter("paramId", id);
 					return query.executeUpdate();
