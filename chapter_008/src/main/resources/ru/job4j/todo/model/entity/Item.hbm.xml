@@ -1,0 +1,10 @@
+<hibernate-mapping>
+    <class name="ru.job4j.todo.model.entity.Item" table="item">
+        <id name="id" column="id_i">
+            <generator class="identity"/>
+        </id>
+        <property name="desc" column="desc_i"/>
+        <property name="created" column="created_i"/>
+        <property name="done" column="done_i"/>
+    </class>
+</hibernate-mapping>
