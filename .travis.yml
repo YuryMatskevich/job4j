@@ -25,4 +25,4 @@ services:
 #create a db for web application from chapter_007
 before_script:
   - psql -c 'create database test;' -U postgres
-#  - mysql -e 'CREATE DATABASE test;'
+  - mysql -e 'CREATE DATABASE test;'

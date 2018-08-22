@@ -34,7 +34,7 @@ public class SettingUpListner implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-		HibernateUtil.getSessionFactory().close();
+//		HibernateUtil.getSessionFactory().close();
 		dropSchema();
 	}
 
@@ -44,7 +44,7 @@ public class SettingUpListner implements ServletContextListener {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn = DriverManager.getConnection(
 					"jdbc:mysql://localhost:3306/"
-							+ "?user=root&password=8088059"
+							+ "?user=travis&password="
 							+ "&useSSL=false"
 							+ "&serverTimezone=UTC"
 							+ "&allowMultiQueries=true"
