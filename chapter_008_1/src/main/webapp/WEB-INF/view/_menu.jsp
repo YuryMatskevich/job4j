@@ -32,6 +32,13 @@
             <li class="nav-item">
                 <p class="nav-link">Hello, Goust</p>
             </li>
+            <c:if test="${filter != null}">
+                <li class="nav-item">
+                    <form action="${pageContext.servletContext.contextPath}/carsList" method="GET">
+                        <button type="submit" class="btn btn-primary">All ads</button>
+                    </form>
+                </li>
+            </c:if>
             <li class="nav-item">
                 <form action="${pageContext.servletContext.contextPath}/login" method="GET">
                     <button type="submit" class="btn btn-primary">Login</button>

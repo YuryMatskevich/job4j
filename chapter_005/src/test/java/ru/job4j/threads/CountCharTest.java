@@ -49,6 +49,7 @@ public class CountCharTest {
         );
     }
 
+    @Ignore
     @Test
     public void whenTimeEndedFirtly() {
         new CountWithTime(path, 1).go();

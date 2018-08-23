@@ -26,7 +26,8 @@ public class AuthFilter implements Filter {
 		HttpSession session = req.getSession(false);
 		if (req.getRequestURI().contains("/login")
 				|| req.getRequestURI().contains("/createUser")
-				|| req.getRequestURI().contains("/carsList")) {
+				|| req.getRequestURI().contains("/carsList")
+				|| req.getRequestURI().contains("/doSearch")) {
 			chain.doFilter(request, response);
 		} else {
 			if (session == null || AppUtils.getLoginedUser(session) == null) {

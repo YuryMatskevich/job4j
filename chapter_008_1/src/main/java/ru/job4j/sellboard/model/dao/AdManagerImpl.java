@@ -2,6 +2,7 @@ package ru.job4j.sellboard.model.dao;
 
 import org.hibernate.HibernateException;
 import ru.job4j.sellboard.model.entity.Ad;
+import ru.job4j.sellboard.model.entity.enums.Sort;
 import ru.job4j.sellboard.model.util.HibernateUtil;
 
 import java.util.List;
@@ -66,5 +67,50 @@ public class AdManagerImpl implements AdManager {
 		} finally {
 			HibernateUtil.closeSession();
 		}
+	}
+
+	@Override
+	public List<Ad> findWithPhoto() {
+		List<Ad> ads = null;
+		try {
+			HibernateUtil.beginTransaction();
+			ads = adDAO.findWithPhoto();
+			HibernateUtil.commitTransaction();
+		} catch (HibernateException e) {
+			HibernateUtil.rollbackTransaction();
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return ads;
+	}
+
+	@Override
+	public List<Ad> findTodayAd() {
+		List<Ad> ads = null;
+		try {
+			HibernateUtil.beginTransaction();
+			ads = adDAO.findTodayAd();
+			HibernateUtil.commitTransaction();
+		} catch (HibernateException e) {
+			HibernateUtil.rollbackTransaction();
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return ads;
+	}
+
+	@Override
+	public List<Ad> findBySort(Sort sort) {
+		List<Ad> ads = null;
+		try {
+			HibernateUtil.beginTransaction();
+			ads = adDAO.findBySort(sort);
+			HibernateUtil.commitTransaction();
+		} catch (HibernateException e) {
+			HibernateUtil.rollbackTransaction();
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return ads;
 	}
 }

@@ -2,7 +2,9 @@ package ru.job4j.sellboard.model.dao;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import ru.job4j.sellboard.model.dao.util.DaoUtil;
 import ru.job4j.sellboard.model.entity.Ad;
+import ru.job4j.sellboard.model.entity.enums.Sort;
 
 import java.util.List;
 
@@ -42,5 +44,31 @@ public class AdDAOImpl extends GenericDAOImpl<Ad, Integer> implements AdDAO {
 		oldAd.setPrice(ad.getPrice());
 		oldAd.setState(ad.getState());
 		oldAd.setCar(ad.getCar());
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Ad> findWithPhoto() {
+		Session session = getSession();
+		Query query = session.createQuery("from Ad where picture is not null");
+		return query.getResultList();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Ad> findTodayAd() {
+		Session session = getSession();
+		Query query = session.createQuery("from Ad where time >: paramTime");
+		query.setParameter("paramTime", DaoUtil.getStartOfDay());
+		return query.getResultList();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Ad> findBySort(Sort sort) {
+		Session session = getSession();
+		Query query = session.createQuery("from Ad where car.sort =: paramSort");
+		query.setParameter("paramSort", sort);
+		return query.getResultList();
 	}
 }

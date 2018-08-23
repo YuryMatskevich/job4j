@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ru.job4j.sellboard.controller.SettingUpListner;
+import ru.job4j.sellboard.model.dao.util.DaoUtil;
 import ru.job4j.sellboard.model.entity.Ad;
 import ru.job4j.sellboard.model.entity.Car;
 import ru.job4j.sellboard.model.entity.Credential;
@@ -12,9 +13,7 @@ import ru.job4j.sellboard.model.entity.enums.*;
 
 import javax.servlet.ServletContextEvent;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -57,7 +56,7 @@ public class AdManagerImplTest {
 				"test1",
 				100.5,
 				false,
-				123L,
+				DaoUtil.getStartOfDay() + (12 * 60 * 60 * 1000),
 				null
 		);
 		ad1.setCar(
@@ -134,7 +133,7 @@ public class AdManagerImplTest {
 				"alterTest",
 				1000.5,
 				true,
-				123L,
+				DaoUtil.getStartOfDay() + (12 * 60 * 60 * 1000),
 				null
 		);
 		alterAd.setCar(
@@ -154,6 +153,35 @@ public class AdManagerImplTest {
 				"They should be the same ads",
 				alterAd,
 				adManager.findById(id)
+		);
+	}
+
+	@Test
+	public void findWithPhotoTest() {
+		List<Ad> ads = adManager.findWithPhoto();
+		assertTrue(
+				"There is no any ads with a photo",
+				ads.isEmpty()
+		);
+	}
+
+	@Test
+	public void findTodayAdTest() {
+		List<Ad> ads = adManager.findTodayAd();
+		assertEquals(
+				"They should be the same ads",
+				ad1,
+				ads.get(0)
+		);
+	}
+
+	@Test
+	public void findBySortTest() {
+		List<Ad> ads = adManager.findBySort(Sort.RENO);
+		assertEquals(
+				"They should be the same ads",
+				ad1,
+				ads.get(0)
 		);
 	}
 }

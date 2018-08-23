@@ -70,6 +70,14 @@
         <servlet-name>Load a photo</servlet-name>
         <url-pattern>/loadPhoto</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Do searching</servlet-name>
+        <servlet-class>ru.job4j.sellboard.controller.CarFilterController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Do searching</servlet-name>
+        <url-pattern>/doSearch</url-pattern>
+    </servlet-mapping>
 
     <!--filters-->
     <filter>
