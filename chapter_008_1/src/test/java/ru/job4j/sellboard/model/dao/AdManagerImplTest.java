@@ -3,7 +3,6 @@ package ru.job4j.sellboard.model.dao;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import ru.job4j.sellboard.controller.SettingUpListner;
 import ru.job4j.sellboard.model.dao.util.DaoUtil;
 import ru.job4j.sellboard.model.entity.Ad;
 import ru.job4j.sellboard.model.entity.Car;
@@ -11,41 +10,36 @@ import ru.job4j.sellboard.model.entity.Credential;
 import ru.job4j.sellboard.model.entity.User;
 import ru.job4j.sellboard.model.entity.enums.*;
 
-import javax.servlet.ServletContextEvent;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import java.util.*;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Yury Matskevich
  */
 public class AdManagerImplTest {
-	private UserManager userManager = new UserManagerImpl();
-	private AdManager adManager = new AdManagerImpl();
+	private final UserManager userManager = new UserManagerImpl();
+	private final AdManager adManager = new AdManagerImpl();
 	private User user;
 	private Ad ad1;
 	private Ad ad2;
 
 	@Before
 	public void setUp() {
-		new SettingUpListner()
-				.contextInitialized(
-						mock(ServletContextEvent.class)
-				);
 		addTestUser();
 		userManager.createNewUser(user);
-
 	}
 
 	@After
 	public void backDown() {
-		new SettingUpListner()
-				.contextDestroyed(
-						mock(ServletContextEvent.class)
-				);
+		List<User> users = userManager.getAllUsers();
+		for (User user : users) {
+			userManager.deleteUser(user.getId());
+		}
 	}
 
 	//adds a new user for testing
