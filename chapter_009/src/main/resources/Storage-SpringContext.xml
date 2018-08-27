@@ -1,0 +1,25 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--Properties definition-->
+    <context:property-placeholder location="classpath:setting.properties"/>
+
+    <!--Beans definitions-->
+    <bean id="dbStore" class="ru.job4j.storage.store.JdbcStorage">
+        <property name="url" value="${jdbc.url}"/>
+        <property name="userName" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <bean id="memStore" class="ru.job4j.storage.store.MemoryStorage"/>
+
+    <bean id="mainApp" class="ru.job4j.storage.ImportUser">
+        <constructor-arg ref="memStore"/>
+    </bean>
+
+</beans>
