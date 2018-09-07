@@ -24,11 +24,8 @@ import static org.mockito.Mockito.mock;
  * @author Yury Matskevich
  */
 public class AdManagerImplTest {
-	private UserManager userManager = new UserManagerImpl();
-	private AdManager adManager = new AdManagerImpl();
-	private User user;
-	private Ad ad1;
-	private Ad ad2;
+	private final UserManager userManager = new UserManagerImpl();
+	private final AdManager adManager = new AdManagerImpl();
 
 	@Before
 	public void setUp() {
@@ -36,8 +33,8 @@ public class AdManagerImplTest {
 				.contextInitialized(
 						mock(ServletContextEvent.class)
 				);
-		addTestUser();
-		userManager.createNewUser(user);
+		deleteAdmin();
+		userManager.createNewUser(createTestUser());
 
 	}
 
@@ -49,11 +46,16 @@ public class AdManagerImplTest {
 				);
 	}
 
-	//adds a new user for testing
-	private void addTestUser() {
-		user = new User("user", Role.USER);
+	//deletes an ADMIN from db
+	private void deleteAdmin() {
+		userManager.deleteUser(1);
+	}
+
+	//creates a new user for testing
+	private User createTestUser() {
+		User user = new User("user", Role.USER);
 		user.setCredential(new Credential("user", "user"));
-		ad1 = new Ad(
+		Ad ad1 = new Ad(
 				"test1",
 				100.5,
 				false,
@@ -72,7 +74,7 @@ public class AdManagerImplTest {
 				)
 		);
 		ad1.setUser(user);
-		ad2 = new Ad(
+		Ad ad2 = new Ad(
 				"test2",
 				500.5,
 				false,
@@ -93,11 +95,13 @@ public class AdManagerImplTest {
 		ad2.setUser(user);
 		user.add(ad1);
 		user.add(ad2);
+		return user;
 	}
 
 	@Test
 	public void getAllAdsTest() {
-		Set<Ad> expectedAds = new HashSet<>(Arrays.asList(ad1, ad2));
+
+		Set<Ad> expectedAds = new HashSet<>(userManager.getAllUsers().get(0).getAds());
 		Set<Ad> actualAds = new HashSet<>(adManager.getAllAds());
 		assertEquals(
 				"They should be the same set of ads",
@@ -108,28 +112,32 @@ public class AdManagerImplTest {
 
 	@Test
 	public void delteAdTest() {
-		int idAd = ad1.getId();
-		adManager.delteAd(idAd);
-		assertEquals(
-				"They should be the same ads",
-				ad2,
-				adManager.getAllAds().get(0)
+		int idAd1 = adManager.getAllAds().get(0).getId();
+		int idAd2 = adManager.getAllAds().get(1).getId();
+		adManager.delteAd(idAd1);
+		adManager.delteAd(idAd2);
+		assertTrue(
+				"There is no ads",
+				adManager.getAllAds().isEmpty()
 		);
 	}
 
 	@Test
 	public void findByIdTest() {
-		int id = ad1.getId();
+		int idDelete = adManager.getAllAds().get(0).getId();
+		adManager.delteAd(idDelete);
+		Ad ad = adManager.getAllAds().get(0);
 		assertEquals(
 				"They should be the same ads",
-				ad1,
-				adManager.findById(id)
+				ad,
+				adManager.findById(ad.getId())
 		);
 	}
 
 	@Test
 	public void updateAdTest() {
-		int id = ad1.getId();
+		Ad ad = adManager.getAllAds().get(0);
+		int id = ad.getId();
 		Ad alterAd = new Ad(
 				"alterTest",
 				1000.5,

@@ -13,6 +13,7 @@ import ru.job4j.sellboard.model.entity.enums.*;
 import javax.servlet.ServletContextEvent;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -20,8 +21,7 @@ import static org.mockito.Mockito.mock;
  * @author Yury Matskevich
  */
 public class UserManagerImplTest {
-	private UserManager userManager = new UserManagerImpl();
-	private User user;
+	private final UserManager userManager = new UserManagerImpl();
 
 	@Before
 	public void setUp() {
@@ -30,8 +30,7 @@ public class UserManagerImplTest {
 						mock(ServletContextEvent.class)
 				);
 		deleteAdmin();
-		addTestUser();
-		userManager.createNewUser(user);
+		userManager.createNewUser(createTestUser());
 	}
 
 	@After
@@ -47,10 +46,11 @@ public class UserManagerImplTest {
 		userManager.deleteUser(1);
 	}
 
-	//adds a new user for testing
-	private void addTestUser() {
-		user = new User("user", Role.USER);
+	//creates a new user for testing
+	private User createTestUser() {
+		User user = new User("user", Role.USER);
 		user.setCredential(new Credential("user", "user"));
+		return user;
 	}
 
 	//returns one existing user from db
@@ -62,25 +62,21 @@ public class UserManagerImplTest {
 	public void createNewUserTest() {
 		assertEquals(
 				"They should be the same users",
-				user,
+				createTestUser(),
 				getSingleUserFromDb()
 		);
 	}
 
 	@Test
 	public void findUserByIdTest() {
-		int id = user.getId();
-		assertEquals(
-				"They should be the same users",
-				user,
-				userManager.findUserById(id)
-		);
+		int id = getSingleUserFromDb().getId();
+		assertNotNull(userManager.findUserById(id));
 	}
 
 	@Test
 	public void updateUserTest() {
 		User alterUser = new User("alterUser", Role.ADMIN);
-		alterUser.setId(user.getId());
+		alterUser.setId(getSingleUserFromDb().getId());
 		alterUser.setCredential(
 				new Credential(
 						"alterLogin",
@@ -97,7 +93,7 @@ public class UserManagerImplTest {
 
 	@Test
 	public void deleteUserTest() {
-		int id = user.getId();
+		int id = getSingleUserFromDb().getId();
 		userManager.deleteUser(id);
 		assertTrue(
 				"A db should be empty",
@@ -125,7 +121,7 @@ public class UserManagerImplTest {
 						Frame.SEDAN
 				)
 		);
-		int id = user.getId();
+		int id = getSingleUserFromDb().getId();
 		userManager.addNewAdToUser(id, ad);
 		assertEquals(
 				"They should be the same ads",
@@ -154,7 +150,7 @@ public class UserManagerImplTest {
 						Frame.SEDAN
 				)
 		);
-		int userId = user.getId();
+		int userId = getSingleUserFromDb().getId();
 		userManager.addNewAdToUser(userId, ad);
 		int adId = ad.getId();
 		userManager.deleteAdFromUser(userId, adId);
@@ -166,6 +162,7 @@ public class UserManagerImplTest {
 
 	@Test
 	public void getIdValidUserTest() {
+		User user = getSingleUserFromDb();
 		String login = user.getCredential().getLogin();
 		String password = user.getCredential().getPassport();
 		Integer expectedId = user.getId();
