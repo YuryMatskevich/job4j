@@ -18,11 +18,11 @@ import java.sql.Statement;
  */
 public class SettingUpListner implements ServletContextListener {
 	private static final Logger LOG = Logger.getLogger(SettingUpListner.class);
-	private String createScript = getClass()
+	private final String createScript = getClass()
 			.getClassLoader()
 			.getResource("createScript.sql")
 			.getPath();
-	private String deleteScript = getClass()
+	private final String deleteScript = getClass()
 			.getClassLoader()
 			.getResource("deleteScript.sql")
 			.getPath();

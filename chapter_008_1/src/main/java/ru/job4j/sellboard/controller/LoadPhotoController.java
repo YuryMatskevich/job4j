@@ -16,7 +16,7 @@ import java.io.OutputStream;
  * @author Yury Matskevich
  */
 public class LoadPhotoController extends HttpServlet {
-	AdManager adManager = new AdManagerImpl();
+	private final AdManager adManager = new AdManagerImpl();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)

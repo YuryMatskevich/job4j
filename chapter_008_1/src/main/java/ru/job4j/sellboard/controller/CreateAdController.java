@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 @MultipartConfig
 public class CreateAdController extends HttpServlet {
-	private UserManager userManager = new UserManagerImpl();
+	private final UserManager userManager = new UserManagerImpl();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)

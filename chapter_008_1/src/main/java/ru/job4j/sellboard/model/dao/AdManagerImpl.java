@@ -10,7 +10,7 @@ import java.util.List;
  * @author Yury Matskevich
  */
 public class AdManagerImpl implements AdManager {
-	private AdDAO adDAO = new AdDAOImpl();
+	private final AdDAO adDAO = new AdDAOImpl();
 
 	@Override
 	public List<Ad> getAllAds() {

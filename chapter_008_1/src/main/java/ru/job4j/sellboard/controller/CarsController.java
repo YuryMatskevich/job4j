@@ -15,7 +15,7 @@ import java.io.IOException;
  * @author Yury Matskevich
  */
 public class CarsController extends HttpServlet {
-	private AdManager adManager = new AdManagerImpl();
+	private final AdManager adManager = new AdManagerImpl();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)

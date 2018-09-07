@@ -16,7 +16,7 @@ import java.io.IOException;
  * @author Yury Matskevich
  */
 public class LoginController extends HttpServlet {
-	private UserManager userManager = new UserManagerImpl();
+	private final UserManager userManager = new UserManagerImpl();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)

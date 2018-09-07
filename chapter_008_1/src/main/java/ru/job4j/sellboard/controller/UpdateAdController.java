@@ -1,25 +1,23 @@
 package ru.job4j.sellboard.controller;
 
-import org.apache.commons.io.IOUtils;
 import ru.job4j.sellboard.controller.utils.AppUtils;
 import ru.job4j.sellboard.model.dao.AdManager;
 import ru.job4j.sellboard.model.dao.AdManagerImpl;
-import ru.job4j.sellboard.model.dao.UserManager;
-import ru.job4j.sellboard.model.dao.UserManagerImpl;
 import ru.job4j.sellboard.model.entity.Ad;
 import ru.job4j.sellboard.model.entity.Car;
 import ru.job4j.sellboard.model.entity.enums.*;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
  * @author Yury Matskevich
  */
 public class UpdateAdController extends HttpServlet {
-	private AdManager adManager = new AdManagerImpl();
-	private UserManager userManager = new UserManagerImpl();
+	private final AdManager adManager = new AdManagerImpl();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)

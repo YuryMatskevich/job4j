@@ -11,7 +11,7 @@ import java.util.List;
  * @author Yury Matskevich
  */
 public class UserManagerImpl implements UserManager {
-	private UserDAO userDAO = new UserDAOImpl();
+	private final UserDAO userDAO = new UserDAOImpl();
 
 	@Override
 	public void createNewUser(User user) {
